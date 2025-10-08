@@ -33,5 +33,39 @@ router.post("/", async (req, res) => {
   });
   res.json({ name: nome, email: email, phone: phone });
 });
+router.get("/", async (req, res) => {
+  const { q, page = 1, pageSize = 10 } = req.query;
+
+  const total = await prisma.contacts.count({
+    where: q
+      ? {
+          OR: [
+            { nome: { contains: String(q), mode: "insensitive" } },
+            { email: { contains: String(q), mode: "insensitive" } },
+          ],
+        }
+      : {},
+  });
+
+  const contacts = await prisma.contacts.findMany({
+    where: q
+      ? {
+          OR: [
+            { nome: { contains: String(q), mode: "insensitive" } },
+            { email: { contains: String(q), mode: "insensitive" } },
+          ],
+        }
+      : {},
+    skip: (Number(page) - 1) * Number(pageSize),
+    take: Number(pageSize),
+  });
+
+  res.json({
+    data: contacts,
+    page: Number(page),
+    pageSize: Number(pageSize),
+    total: total,
+  });
+});
 
 export default router;
