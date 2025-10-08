@@ -89,5 +89,15 @@ router.put("/:id", async (req, res) => {
     res.status(500).json({ error: "InternalError" });
   }
 });
-
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    await prisma.contacts.delete({ where: { id: Number(id) } });
+    res.json(`Contato de id ${id} deletado!`);
+  } catch (error: any) {
+    if (error.code === "P2025")
+      return res.status(400).json({ error: "Not Found" });
+    res.status(500).json({ error: "InternalError" });
+  }
+});
 export default router;
