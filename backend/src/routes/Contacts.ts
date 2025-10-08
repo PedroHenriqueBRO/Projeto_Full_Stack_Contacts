@@ -67,5 +67,27 @@ router.get("/", async (req, res) => {
     total: total,
   });
 });
+router.put("/:id", async (req, res) => {
+  const { id } = req.params;
+  const { nome, email, phone } = req.body;
+  if (!nome || !email || !phone) {
+    return res.status(400).json({ error: "ValidationError" });
+  }
+  try {
+    const contacts = await prisma.contacts.findMany();
+    const contact = await prisma.contacts.update({
+      where: { id: Number(id) },
+      data: {
+        nome: nome,
+        email: email,
+        phone: phone,
+        updatedAt: new Date(),
+      },
+    });
+    res.json(contact);
+  } catch (error) {
+    res.status(500).json({ error: "InternalError" });
+  }
+});
 
 export default router;
