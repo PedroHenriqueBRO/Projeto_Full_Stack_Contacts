@@ -50,10 +50,8 @@ const seedContacts: { nome: string; email: string; phone: string }[] = [
   },
 ];
 async function main() {
-  console.log("Iniciando script de seed...");
-
   for (const contato of seedContacts) {
-    await prisma.contacts.upsert({
+    await prisma.contact.upsert({
       where: { email: contato.email },
       update: {},
       create: {
@@ -63,8 +61,6 @@ async function main() {
       },
     });
   }
-
-  console.log("Seed concluído com sucesso!");
 }
 
 main()
