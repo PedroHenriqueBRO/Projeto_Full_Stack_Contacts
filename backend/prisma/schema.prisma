@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Contacts {
+model Contact {
   id        Int      @id @default(autoincrement())
   nome      String
   phone     String
