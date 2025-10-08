@@ -34,7 +34,7 @@ router.post("/", async (req, res) => {
   res.json({ name: nome, email: email, phone: phone });
 });
 router.get("/", async (req, res) => {
-  const { q, page = 1, pageSize = 10 } = req.query;
+  const { q, page, pageSize } = req.query;
 
   const total = await prisma.contact.count({
     where: q
