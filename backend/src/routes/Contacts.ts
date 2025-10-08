@@ -4,7 +4,7 @@ import { prisma } from "../prisma";
 const router = Router();
 router.post("/", async (req, res) => {
   const { nome, email, phone } = req.body;
-  const contacts = await prisma.contacts.findMany();
+  const contacts = await prisma.contact.findMany();
   const emailDuplicado = contacts.filter(
     (value: {
       id: any;
@@ -22,7 +22,7 @@ router.post("/", async (req, res) => {
   if (emailDuplicado) {
     return res.status(409).json({ error: "Email duplicado!" });
   }
-  const contact = await prisma.contacts.create({
+  const contact = await prisma.contact.create({
     data: {
       nome: nome,
       email: email,
@@ -36,7 +36,7 @@ router.post("/", async (req, res) => {
 router.get("/", async (req, res) => {
   const { q, page = 1, pageSize = 10 } = req.query;
 
-  const total = await prisma.contacts.count({
+  const total = await prisma.contact.count({
     where: q
       ? {
           OR: [
@@ -47,7 +47,7 @@ router.get("/", async (req, res) => {
       : {},
   });
 
-  const contacts = await prisma.contacts.findMany({
+  const contacts = await prisma.contact.findMany({
     where: q
       ? {
           OR: [
@@ -74,7 +74,7 @@ router.put("/:id", async (req, res) => {
     return res.status(400).json({ error: "ValidationError" });
   }
   try {
-    const contacts = await prisma.contacts.findMany();
+    const contacts = await prisma.contact.findMany();
     const emailDuplicado = contacts.filter(
       (value: {
         id: any;
@@ -92,7 +92,7 @@ router.put("/:id", async (req, res) => {
     if (emailDuplicado) {
       return res.status(409).json({ error: "Email duplicado!" });
     }
-    const contact = await prisma.contacts.update({
+    const contact = await prisma.contact.update({
       where: { id: Number(id) },
       data: {
         nome: nome,
@@ -109,7 +109,7 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    await prisma.contacts.delete({ where: { id: Number(id) } });
+    await prisma.contact.delete({ where: { id: Number(id) } });
     res.json(`Contato de id ${id} deletado!`);
   } catch (error: any) {
     if (error.code === "P2025")
