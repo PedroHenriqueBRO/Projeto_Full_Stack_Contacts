@@ -75,6 +75,23 @@ router.put("/:id", async (req, res) => {
   }
   try {
     const contacts = await prisma.contacts.findMany();
+    const emailDuplicado = contacts.filter(
+      (value: {
+        id: any;
+        nome: string;
+        email: string;
+        phone: string;
+        createdAt: Date;
+        updatedAt: Date;
+      }) => {
+        if (value.email == email) {
+          return true;
+        }
+      }
+    );
+    if (emailDuplicado) {
+      return res.status(409).json({ error: "Email duplicado!" });
+    }
     const contact = await prisma.contacts.update({
       where: { id: Number(id) },
       data: {
