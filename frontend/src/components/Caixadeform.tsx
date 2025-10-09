@@ -1,6 +1,5 @@
 import { useCallback, useState } from "react";
 interface Contact {
-  id: number;
   nome: string;
   email: string;
   phone: string;
@@ -12,7 +11,8 @@ function Caixadeform() {
     "Atualizar Contato",
     "Deletar Contato",
   ];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line prefer-const
+  let contato: Contact = { nome: "", email: "", phone: "" };
   const [contatos, setContatos] = useState<Contact[]>();
   const [searchName, setSearchName] = useState<string>("");
   const [layout, setLayout] = useState<number>(0);
@@ -30,6 +30,28 @@ function Caixadeform() {
     } catch (error) {
       setContatos([]);
       console.error("Erro na busca:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+  const postContacts = useCallback(async (contato: Contact | undefined) => {
+    const url = `http://localhost:8082/contacts`;
+    setLoading(true);
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(contato),
+      });
+      if (!response.ok) {
+        throw new Error("Falha ao tentar criar contato na API.");
+      }
+      contato = { nome: "", email: "", phone: "" };
+      setLayout(0);
+    } catch (error) {
+      console.error("Erro na criação:", error);
     } finally {
       setLoading(false);
     }
@@ -76,6 +98,7 @@ function Caixadeform() {
           </h1>
           <input
             type="text"
+            placeholder="Nome de busca"
             className=" absolute w-[300px] h-[50px] mt-30 bg-white border-2 text-center"
             onChange={(e) => {
               setSearchName(e.target.value);
@@ -104,6 +127,43 @@ function Caixadeform() {
         >
           <h1 className="text-white">Voltar</h1>
         </button>
+        <div className="h-[400px] w-full flex flexcol justify-center">
+          <h1 className="absolute font-bold text-[20px]">Nome</h1>
+          <input
+            type="text"
+            placeholder="Nome Completo"
+            className=" absolute w-[300px] h-[50px] mt-10 bg-white border-2 text-center"
+            onChange={(e) => {
+              contato.nome = e.target.value;
+            }}
+          ></input>
+          <h1 className="absolute font-bold text-[20px] mt-23">Email</h1>
+          <input
+            type="text"
+            placeholder="exemplo@exemplo.com"
+            className=" absolute w-[300px] h-[50px] mt-33 bg-white border-2 text-center"
+            onChange={(e) => {
+              contato.email = e.target.value;
+            }}
+          ></input>
+          <h1 className="absolute font-bold text-[20px] mt-47">Telefone</h1>
+          <input
+            type="text"
+            placeholder="+99 99 99999-9999"
+            className=" absolute w-[300px] h-[50px] mt-57 bg-white border-2 text-center"
+            onChange={(e) => {
+              contato.phone = e.target.value;
+            }}
+          ></input>
+          <button
+            onClick={() => {
+              postContacts(contato);
+            }}
+            className="w-[300px] h-[60px] bg-white mt-80 rounded-full"
+          >
+            Criar
+          </button>
+        </div>
       </div>
     );
   }
@@ -152,7 +212,7 @@ function Caixadeform() {
             </h2>
             <ul className="divide-y divide-gray-200">
               {contatos.map((contato) => (
-                <li key={contato.id} className="py-2 text-gray-900">
+                <li className="py-2 text-gray-900">
                   <p className="font-bold">{contato.nome}</p>
                   <p className="text-sm text-gray-600">
                     Email: {contato.email}
