@@ -63,3 +63,37 @@ router.post("/", async (req, res) => {
     }
   }
 });
+router.get("/", async (req, res) => {
+  const { q, page = 1, pageSize = 10 } = req.query;
+  const qError = zodQ.safeParse(q);
+  const pageError = zodPageAndPageSize.safeParse(page);
+  const pageSizeError = zodPageAndPageSize.safeParse(pageSize);
+  const validationErrors: { path: string; message: string }[] = [];
+  if (!qError.success) {
+    qError.error.issues.forEach((issue) =>
+      validationErrors.push({ path: "q", message: issue.message })
+    );
+  }
+  if (!pageError.success) {
+    pageError.error.issues.forEach((issue) =>
+      validationErrors.push({ path: "page", message: issue.message })
+    );
+  }
+  if (!pageSizeError.success) {
+    pageSizeError.error.issues.forEach((issue) =>
+      validationErrors.push({ path: "pageSize", message: issue.message })
+    );
+  }
+  if (validationErrors.length > 0) {
+    return res.status(400).json({
+      error: "Falha na validação dos dados.",
+      details: validationErrors,
+    });
+  }
+  const contactsObj = cService.getContacts(
+    String(q),
+    Number(page),
+    Number(pageSize)
+  );
+  res.json(await contactsObj);
+});
