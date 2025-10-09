@@ -14,26 +14,35 @@ function Caixadeform() {
   // eslint-disable-next-line prefer-const
   let contato: Contact = { nome: "", email: "", phone: "" };
   const [contatos, setContatos] = useState<Contact[]>();
+  const [page, setPage] = useState<number>(1);
+  const [pagemax, setPagesize] = useState<number>(10);
   const [searchName, setSearchName] = useState<string>("");
   const [layout, setLayout] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
-  const fetchContacts = useCallback(async (name: string) => {
-    const url = `http://localhost:8082/contacts?q=${name}&page=${1}&pageSize=${10}`;
-    setLoading(true);
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("Falha ao buscar contatos na API.");
+  const fetchContacts = useCallback(
+    async (
+      name: string,
+      page: number | undefined,
+      pagesize: number | undefined
+    ) => {
+      const url = `http://localhost:8082/contacts?q=${name}&page=${page}&pageSize=${pagesize}`;
+      setLoading(true);
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error("Falha ao buscar contatos na API.");
+        }
+        const data = await response.json();
+        setContatos(data.data as Contact[]);
+      } catch (error) {
+        setContatos([]);
+        console.error("Erro na busca:", error);
+      } finally {
+        setLoading(false);
       }
-      const data = await response.json();
-      setContatos(data.data as Contact[]);
-    } catch (error) {
-      setContatos([]);
-      console.error("Erro na busca:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    },
+    []
+  );
   const postContacts = useCallback(async (contato: Contact | undefined) => {
     const url = `http://localhost:8082/contacts`;
     setLoading(true);
@@ -93,24 +102,42 @@ function Caixadeform() {
         </button>
 
         <div className="h-[400px] w-full flex flexcol justify-center">
-          <h1 className="absolute font-bold text-[25px] mt-15">
-            Digite o Nome de Busca
-          </h1>
+          <h1 className="absolute font-bold text-[20px]">Nome de Busca</h1>
           <input
             type="text"
             placeholder="Nome de busca"
-            className=" absolute w-[300px] h-[50px] mt-30 bg-white border-2 text-center"
+            className=" absolute w-[300px] h-[50px] mt-10 bg-white border-2 text-center"
             onChange={(e) => {
               setSearchName(e.target.value);
             }}
           ></input>
+          <h1 className="absolute font-bold text-[20px] mt-25">Pagina</h1>
+          <input
+            type="text"
+            placeholder="Pagina atual"
+            className=" absolute w-[300px] h-[50px] mt-35 bg-white border-2 text-center"
+            onChange={(e) => {
+              setPage(e.target.value as unknown as number);
+            }}
+          ></input>
+          <h1 className="absolute font-bold text-[20px] mt-50">
+            Tamanho máximo de paginas
+          </h1>
+          <input
+            type="text"
+            placeholder="Páginas máximas"
+            className=" absolute w-[300px] h-[50px] mt-60 bg-white border-2 text-center"
+            onChange={(e) => {
+              setPagesize(e.target.value as unknown as number);
+            }}
+          ></input>
           <button
             onClick={() => {
-              fetchContacts(searchName);
+              fetchContacts(searchName, page, pagemax);
               setLayout(5);
             }}
             disabled={loading || searchName.length === 0}
-            className="w-[300px] h-[60px] bg-white mt-60 rounded-full"
+            className="w-[300px] h-[60px] bg-white mt-80 rounded-full"
           >
             Buscar
           </button>
@@ -196,6 +223,8 @@ function Caixadeform() {
       <div className="bg-sky-500 h-[500px] w-[400px] rounded-md mr-300 mt-50 flex-col flex items-center gap-6">
         <button
           onClick={() => {
+            setPage(1);
+            setPagesize(10);
             setSearchName("");
             setLayout(0);
           }}
