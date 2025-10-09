@@ -97,4 +97,13 @@ export class ContactService {
       throw new Error("InternalError");
     }
   }
+  async deleteContact(id: number) {
+    try {
+      await prisma.contact.delete({ where: { id: Number(id) } });
+      return `Contato de id ${id} deletado!`;
+    } catch (error: any) {
+      if (error.code === "P2025") throw new Error("Not Found");
+      throw new Error("InternalError");
+    }
+  }
 }
