@@ -230,6 +230,52 @@ function Caixadeform() {
         >
           <h1 className="text-white">Voltar</h1>
         </button>
+        <h1 className="absolute font-bold text-[20px] mt-10">Id</h1>
+        <input
+          type="text"
+          placeholder="ex : 1"
+          className=" absolute w-[300px] h-[50px] mt-20 bg-white border-2 text-center"
+          onChange={(e) => {
+            setId(e.target.value as unknown as number);
+          }}
+        ></input>
+        <div className="h-[500px] w-full flex flexcol justify-center">
+          <h1 className="absolute font-bold text-[20px] mt-33">Nome</h1>
+          <input
+            type="text"
+            placeholder="Nome Completo"
+            className=" absolute w-[300px] h-[50px] mt-43 bg-white border-2 text-center"
+            onChange={(e) => {
+              contato.nome = e.target.value;
+            }}
+          ></input>
+          <h1 className="absolute font-bold text-[20px] mt-56">Email</h1>
+          <input
+            type="text"
+            placeholder="exemplo@exemplo.com"
+            className=" absolute w-[300px] h-[50px] mt-66 bg-white border-2 text-center"
+            onChange={(e) => {
+              contato.email = e.target.value;
+            }}
+          ></input>
+          <h1 className="absolute font-bold text-[20px] mt-79">Telefone</h1>
+          <input
+            type="text"
+            placeholder="+99 99 99999-9999"
+            className=" absolute w-[300px] h-[50px] mt-89 bg-white border-2 text-center"
+            onChange={(e) => {
+              contato.phone = e.target.value;
+            }}
+          ></input>
+          <button
+            onClick={() => {
+              putContacts(contato);
+            }}
+            className="w-[300px] h-[60px] bg-white mt-105 rounded-full cursor-pointer transition duration-150"
+          >
+            Atualizar
+          </button>
+        </div>
       </div>
     );
   }
