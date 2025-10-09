@@ -148,3 +148,30 @@ router.put("/:id", async (req, res) => {
     }
   }
 });
+router.delete("/:id", async (req, res) => {
+  let { id } = req.params;
+  const idError = zodId.safeParse(id);
+  const validationErrors: { path: string; message: string }[] = [];
+  if (!idError.success) {
+    idError.error.issues.forEach((issue) =>
+      validationErrors.push({ path: "id", message: issue.message })
+    );
+  }
+  if (validationErrors.length > 0) {
+    return res.status(400).json({
+      error: "Falha na validação dos dados.",
+      details: validationErrors,
+    });
+  }
+  try {
+    cService.deleteContact(Number(idError.data));
+    res.json(`Contato de id ${id} deletado`);
+  } catch (erro: any) {
+    if (erro.message === "Not Found") {
+      return res.status(400).json({ error: "Not Found" });
+    }
+    if (erro.message === "") {
+      return res.status(500).json({ error: "InternalError" });
+    }
+  }
+});
