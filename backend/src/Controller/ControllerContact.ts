@@ -97,3 +97,54 @@ router.get("/", async (req, res) => {
   );
   res.json(await contactsObj);
 });
+router.put("/:id", async (req, res) => {
+  const { id } = req.params;
+  const { nome, email, phone } = req.body;
+  const idError = zodId.safeParse(id);
+  const nomeError = zodName.safeParse(nome);
+  const emailError = zodEmail.safeParse(email);
+  const phoneError = zodPhone.safeParse(phone);
+  const validationErrors: { path: string; message: string }[] = [];
+  if (!idError.success) {
+    idError.error.issues.forEach((issue) =>
+      validationErrors.push({ path: "id", message: issue.message })
+    );
+  }
+  if (!nomeError.success) {
+    nomeError.error.issues.forEach((issue) =>
+      validationErrors.push({ path: "nome", message: issue.message })
+    );
+  }
+  if (!emailError.success) {
+    emailError.error.issues.forEach((issue) =>
+      validationErrors.push({ path: "email", message: issue.message })
+    );
+  }
+  if (!phoneError.success) {
+    phoneError.error.issues.forEach((issue) =>
+      validationErrors.push({ path: "phone", message: issue.message })
+    );
+  }
+
+  if (validationErrors.length > 0) {
+    return res.status(400).json({
+      error: "Falha na validação dos dados.",
+      details: validationErrors,
+    });
+  }
+  try {
+    const contact = cService.putContact(Number(id), {
+      nome: nome,
+      email: email,
+      phone: phone,
+    });
+    res.json(await contact);
+  } catch (erro: any) {
+    if (erro.message === "Email duplicado") {
+      return res.status(409).json({ error: "Email duplicado!" });
+    }
+    if (erro.message === "InternalError") {
+      return res.status(500).json({ error: "InternalError" });
+    }
+  }
+});
