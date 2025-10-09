@@ -73,7 +73,7 @@ function Caixadeform() {
             return (
               <button
                 onClick={() => setLayout(index + 1)}
-                className="rounded-full bg-black w-[200px] h-[60px] mt-23"
+                className="rounded-full bg-black w-[200px] h-[60px] mt-23 cursor-pointer transition duration-150"
               >
                 <h1 className="text-white">{value}</h1>
               </button>
@@ -82,7 +82,7 @@ function Caixadeform() {
           return (
             <button
               onClick={() => setLayout(index + 1)}
-              className="rounded-full bg-black w-[200px] h-[60px]"
+              className="rounded-full bg-black w-[200px] h-[60px] cursor-pointer transition duration-150"
             >
               <h1 className="text-white">{value}</h1>
             </button>
@@ -96,7 +96,7 @@ function Caixadeform() {
       <div className="bg-sky-500 h-[500px] w-[400px] rounded-md mr-300 mt-50 flex-col flex items-center gap-6">
         <button
           onClick={() => setLayout(0)}
-          className="rounded-r-lg bg-black w-[100px] h-[60px] mt-4 mr-80 text-center"
+          className="rounded-r-lg bg-black w-[100px] h-[60px] mt-4 mr-80 text-center cursor-pointer transition duration-150"
         >
           <h1 className="text-white">Voltar</h1>
         </button>
@@ -137,7 +137,7 @@ function Caixadeform() {
               setLayout(5);
             }}
             disabled={loading || searchName.length === 0}
-            className="w-[300px] h-[60px] bg-white mt-80 rounded-full"
+            className="w-[300px] h-[60px] bg-white mt-80 rounded-full cursor-pointer transition duration-150"
           >
             Buscar
           </button>
@@ -150,7 +150,7 @@ function Caixadeform() {
       <div className="bg-sky-500 h-[500px] w-[400px] rounded-md mr-300 mt-50 flex-col flex items-center gap-6">
         <button
           onClick={() => setLayout(0)}
-          className="rounded-r-lg bg-black w-[100px] h-[60px] mt-4 mr-80"
+          className="rounded-r-lg bg-black w-[100px] h-[60px] mt-4 mr-80 cursor-pointer transition duration-150"
         >
           <h1 className="text-white">Voltar</h1>
         </button>
@@ -186,7 +186,7 @@ function Caixadeform() {
             onClick={() => {
               postContacts(contato);
             }}
-            className="w-[300px] h-[60px] bg-white mt-80 rounded-full"
+            className="w-[300px] h-[60px] bg-white mt-80 rounded-full cursor-pointer transition duration-150"
           >
             Criar
           </button>
@@ -199,7 +199,7 @@ function Caixadeform() {
       <div className="bg-sky-500 h-[500px] w-[400px] rounded-md mr-300 mt-50 flex-col flex items-center gap-6">
         <button
           onClick={() => setLayout(0)}
-          className="rounded-r-lg bg-black w-[100px] h-[60px] mt-4 mr-80"
+          className="rounded-r-lg bg-black w-[100px] h-[60px] mt-4 mr-80 cursor-pointer transition duration-150"
         >
           <h1 className="text-white">Voltar</h1>
         </button>
@@ -211,7 +211,7 @@ function Caixadeform() {
       <div className="bg-sky-500 h-[500px] w-[400px] rounded-md mr-300 mt-50 flex-col flex items-center gap-6">
         <button
           onClick={() => setLayout(0)}
-          className="rounded-r-lg bg-black w-[100px] h-[60px] mt-4 mr-80"
+          className="rounded-r-lg bg-black w-[100px] h-[60px] mt-4 mr-80 cursor-pointer transition duration-150"
         >
           <h1 className="text-white">Voltar</h1>
         </button>
@@ -228,7 +228,7 @@ function Caixadeform() {
             setSearchName("");
             setLayout(0);
           }}
-          className="absolute bg-black w-[100px] h-[50px] rounded-r-lg text-white mr-80 mt-5"
+          className="absolute bg-black w-[100px] h-[50px] rounded-r-lg text-white mr-80 mt-5 cursor-pointer transition duration-150"
         >
           Voltar
         </button>
