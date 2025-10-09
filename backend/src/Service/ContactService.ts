@@ -34,4 +34,30 @@ export class ContactService {
     });
     return contact;
   }
+  async getContacts(q: string, page: number, pageSize: number) {
+    const total = await prisma.contact.count({
+      where: q
+        ? {
+            OR: [
+              { nome: { contains: String(q), mode: "insensitive" } },
+              { email: { contains: String(q), mode: "insensitive" } },
+            ],
+          }
+        : {},
+    });
+
+    const contacts = await prisma.contact.findMany({
+      where: q
+        ? {
+            OR: [
+              { nome: { contains: String(q), mode: "insensitive" } },
+              { email: { contains: String(q), mode: "insensitive" } },
+            ],
+          }
+        : {},
+      skip: (Number(page) - 1) * Number(pageSize),
+      take: Number(pageSize),
+    });
+    return { data: contacts, page: page, pageSize: pageSize, total: total };
+  }
 }
