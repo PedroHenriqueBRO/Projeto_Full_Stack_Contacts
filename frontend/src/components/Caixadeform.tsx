@@ -19,6 +19,7 @@ function Caixadeform() {
   const [searchName, setSearchName] = useState<string>("");
   const [layout, setLayout] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
+  const [id, setId] = useState<number>(0);
   const fetchContacts = useCallback(
     async (
       name: string,
@@ -65,6 +66,32 @@ function Caixadeform() {
       setLoading(false);
     }
   }, []);
+  const putContacts = useCallback(
+    async (contato: Contact | undefined) => {
+      const url = `http://localhost:8082/contacts/${id}`;
+      setLoading(true);
+      try {
+        const response = await fetch(url, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(contato),
+        });
+        if (!response.ok) {
+          throw new Error("Falha ao tentar atualizar contato na API.");
+        }
+        contato = { nome: "", email: "", phone: "" };
+        setLayout(0);
+      } catch (error) {
+        console.error("Erro na criação:", error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [id]
+  );
+
   if (layout == 0) {
     return (
       <div className="bg-sky-500 h-[500px] w-[400px] rounded-md mr-300 mt-50 flex-col flex items-center gap-6">
@@ -199,7 +226,7 @@ function Caixadeform() {
       <div className="bg-sky-500 h-[500px] w-[400px] rounded-md mr-300 mt-50 flex-col flex items-center gap-6">
         <button
           onClick={() => setLayout(0)}
-          className="rounded-r-lg bg-black w-[100px] h-[60px] mt-4 mr-80 cursor-pointer transition duration-150"
+          className="absolute rounded-r-lg bg-black w-[100px] h-[60px] mt-4 mr-80 cursor-pointer transition duration-150"
         >
           <h1 className="text-white">Voltar</h1>
         </button>
@@ -223,6 +250,7 @@ function Caixadeform() {
       <div className="bg-sky-500 h-[500px] w-[400px] rounded-md mr-300 mt-50 flex-col flex items-center gap-6">
         <button
           onClick={() => {
+            setId(0);
             setPage(1);
             setPagesize(10);
             setSearchName("");
