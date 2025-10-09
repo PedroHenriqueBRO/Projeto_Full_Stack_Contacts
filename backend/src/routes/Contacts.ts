@@ -14,12 +14,12 @@ router.post("/", async (req, res) => {
       createdAt: Date;
       updatedAt: Date;
     }) => {
-      if (value.email == email) {
+      if (value.email === email) {
         return true;
       }
     }
   );
-  if (emailDuplicado) {
+  if (emailDuplicado.length > 0) {
     return res.status(409).json({ error: "Email duplicado!" });
   }
   const contact = await prisma.contact.create({
@@ -35,7 +35,6 @@ router.post("/", async (req, res) => {
 });
 router.get("/", async (req, res) => {
   const { q, page, pageSize } = req.query;
-
   const total = await prisma.contact.count({
     where: q
       ? {
@@ -84,12 +83,12 @@ router.put("/:id", async (req, res) => {
         createdAt: Date;
         updatedAt: Date;
       }) => {
-        if (value.email == email) {
+        if (value.email === email) {
           return true;
         }
       }
     );
-    if (emailDuplicado) {
+    if (emailDuplicado.length > 0) {
       return res.status(409).json({ error: "Email duplicado!" });
     }
     const contact = await prisma.contact.update({
