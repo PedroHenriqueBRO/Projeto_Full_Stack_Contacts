@@ -60,4 +60,41 @@ export class ContactService {
     });
     return { data: contacts, page: page, pageSize: pageSize, total: total };
   }
+  async putContact(id: number, putContact: PutContactDTO): Promise<Contact> {
+    try {
+      const contacts = await prisma.contact.findMany();
+      const emailDuplicado = contacts.filter(
+        (value: {
+          id: any;
+          nome: string;
+          email: string;
+          phone: string;
+          createdAt: Date;
+          updatedAt: Date;
+        }) => {
+          if (value.email === putContact.email) {
+            return true;
+          }
+        }
+      );
+      if (emailDuplicado.length > 0) {
+        throw new Error("Email duplicado");
+      }
+      const cleanData = Object.fromEntries(
+        Object.entries(putContact).filter(([_, v]) => v !== undefined)
+      );
+      const contact = await prisma.contact.update({
+        where: { id: Number(id) },
+        data: {
+          nome: cleanData.nome,
+          email: cleanData.email,
+          phone: cleanData.phone,
+          updatedAt: new Date(),
+        },
+      });
+      return contact;
+    } catch (error) {
+      throw new Error("InternalError");
+    }
+  }
 }
