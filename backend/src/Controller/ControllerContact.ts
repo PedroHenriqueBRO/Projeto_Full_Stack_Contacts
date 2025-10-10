@@ -18,7 +18,11 @@ const zodPageAndPageSize = z
   .string()
   .transform((val) => Number(val))
   .pipe(z.number().int().positive());
-
+const zodSort = z
+  .string()
+  .refine((value) => value === "name" || value === "createdAt")
+  .optional();
+const zodOrder = z.string().optional();
 export const router = Router();
 const cService = new ContactService();
 router.post("/", async (req, res) => {
@@ -64,10 +68,12 @@ router.post("/", async (req, res) => {
   }
 });
 router.get("/", async (req, res) => {
-  const { q, page = 1, pageSize = 10 } = req.query;
+  const { q, page = 1, pageSize = 10, sort, order } = req.query;
   const qError = zodQ.safeParse(q);
   const pageError = zodPageAndPageSize.safeParse(page);
   const pageSizeError = zodPageAndPageSize.safeParse(pageSize);
+  const sortError = zodSort.safeParse(sort);
+  const orderError = zodOrder.safeParse(order);
   const validationErrors: { path: string; message: string }[] = [];
   if (!qError.success) {
     qError.error.issues.forEach((issue) =>
@@ -84,6 +90,17 @@ router.get("/", async (req, res) => {
       validationErrors.push({ path: "pageSize", message: issue.message })
     );
   }
+  if (!sortError.success) {
+    sortError.error.issues.forEach((issue) =>
+      validationErrors.push({ path: "sort", message: issue.message })
+    );
+  }
+  if (!orderError.success) {
+    orderError.error.issues.forEach((issue) =>
+      validationErrors.push({ path: "order", message: issue.message })
+    );
+  }
+
   if (validationErrors.length > 0) {
     return res.status(400).json({
       error: "Falha na validação dos dados.",
@@ -93,7 +110,9 @@ router.get("/", async (req, res) => {
   const contactsObj = cService.getContacts(
     String(q),
     Number(page),
-    Number(pageSize)
+    Number(pageSize),
+    String(sort),
+    String(order)
   );
   res.json(await contactsObj);
 });
