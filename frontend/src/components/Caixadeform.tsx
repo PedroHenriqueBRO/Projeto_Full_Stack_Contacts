@@ -87,10 +87,29 @@ function Caixadeform() {
         console.error("Erro na criação:", error);
       } finally {
         setLoading(false);
+        setId(0);
       }
     },
     [id]
   );
+  const deleteContacts = useCallback(async () => {
+    const url = `http://localhost:8082/contacts/${id}`;
+    setLoading(true);
+    try {
+      const response = await fetch(url, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Falha ao tentar atualizar contato na API.");
+      }
+      setLayout(0);
+    } catch (error) {
+      console.error("Erro na criação:", error);
+    } finally {
+      setLoading(false);
+      setId(0);
+    }
+  }, [id]);
 
   if (layout == 0) {
     return (
@@ -292,10 +311,33 @@ function Caixadeform() {
       <div className="bg-sky-500 h-[500px] w-[400px] rounded-md mr-300 mt-50 flex-col flex items-center gap-6">
         <button
           onClick={() => setLayout(0)}
-          className="rounded-r-lg bg-black w-[100px] h-[60px] mt-4 mr-80 cursor-pointer transition duration-150"
+          className="absolute rounded-r-lg bg-black w-[100px] h-[60px] mt-4 mr-80 cursor-pointer transition duration-150"
         >
           <h1 className="text-white">Voltar</h1>
         </button>
+        {loading ? (
+          <h2 className="text-white text-lg mt-20">Deletando...</h2>
+        ) : (
+          <div className="h-[500px] w-full flex flexcol justify-center">
+            <h1 className="absolute font-bold text-[20px] mt-40">Id</h1>
+            <input
+              type="text"
+              placeholder="ex : 1"
+              className=" absolute w-[300px] h-[50px] mt-50 bg-white border-2 text-center"
+              onChange={(e) => {
+                setId(e.target.value as unknown as number);
+              }}
+            ></input>
+            <button
+              onClick={() => {
+                deleteContacts();
+              }}
+              className="w-[300px] h-[60px] bg-white mt-105 rounded-full cursor-pointer transition duration-150"
+            >
+              Deletar
+            </button>
+          </div>
+        )}
       </div>
     );
   }
@@ -304,7 +346,6 @@ function Caixadeform() {
       <div className="bg-sky-500 h-[500px] w-[400px] rounded-md mr-300 mt-50 flex-col flex items-center gap-6">
         <button
           onClick={() => {
-            setId(0);
             setPage(1);
             setPagesize(10);
             setSearchName("");
