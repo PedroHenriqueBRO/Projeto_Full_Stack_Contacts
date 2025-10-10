@@ -34,7 +34,14 @@ export class ContactService {
     });
     return contact;
   }
-  async getContacts(q: string, page: number, pageSize: number) {
+  async getContacts(
+    q: string,
+    page: number,
+    pageSize: number,
+    nameOrcreatedAt: string,
+    order: string
+  ) {
+    let contacts: Contact[] = [];
     const total = await prisma.contact.count({
       where: q
         ? {
@@ -45,19 +52,50 @@ export class ContactService {
           }
         : {},
     });
-
-    const contacts = await prisma.contact.findMany({
-      where: q
-        ? {
-            OR: [
-              { nome: { contains: String(q), mode: "insensitive" } },
-              { email: { contains: String(q), mode: "insensitive" } },
-            ],
-          }
-        : {},
-      skip: (Number(page) - 1) * Number(pageSize),
-      take: Number(pageSize),
-    });
+    if (nameOrcreatedAt === "name") {
+      const orderBy = order == "asc" ? "asc" : "desc";
+      contacts = await prisma.contact.findMany({
+        where: q
+          ? {
+              OR: [
+                { nome: { contains: String(q), mode: "insensitive" } },
+                { email: { contains: String(q), mode: "insensitive" } },
+              ],
+            }
+          : {},
+        orderBy: { nome: orderBy },
+        skip: (Number(page) - 1) * Number(pageSize),
+        take: Number(pageSize),
+      });
+    } else if (nameOrcreatedAt === "createdAt") {
+      const orderBy = order == "asc" ? "asc" : "desc";
+      contacts = await prisma.contact.findMany({
+        where: q
+          ? {
+              OR: [
+                { nome: { contains: String(q), mode: "insensitive" } },
+                { email: { contains: String(q), mode: "insensitive" } },
+              ],
+            }
+          : {},
+        orderBy: { createdAt: orderBy },
+        skip: (Number(page) - 1) * Number(pageSize),
+        take: Number(pageSize),
+      });
+    } else {
+      contacts = await prisma.contact.findMany({
+        where: q
+          ? {
+              OR: [
+                { nome: { contains: String(q), mode: "insensitive" } },
+                { email: { contains: String(q), mode: "insensitive" } },
+              ],
+            }
+          : {},
+        skip: (Number(page) - 1) * Number(pageSize),
+        take: Number(pageSize),
+      });
+    }
     return { data: contacts, page: page, pageSize: pageSize, total: total };
   }
   async putContact(id: number, putContact: PutContactDTO): Promise<Contact> {
