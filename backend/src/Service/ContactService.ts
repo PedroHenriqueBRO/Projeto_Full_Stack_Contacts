@@ -41,7 +41,7 @@ export class ContactService {
     nameOrcreatedAt: string,
     order: string
   ) {
-    let contacts: Contact[] = [];
+    let contacts: Contact[] = await prisma.contact.findMany();
     const total = await prisma.contact.count({
       where: q
         ? {
@@ -52,7 +52,7 @@ export class ContactService {
           }
         : {},
     });
-    if (nameOrcreatedAt === "name") {
+    if (nameOrcreatedAt === "name" ) {
       const orderBy = order == "asc" ? "asc" : "desc";
       contacts = await prisma.contact.findMany({
         where: q
@@ -83,20 +83,21 @@ export class ContactService {
         take: Number(pageSize),
       });
     } else {
-      contacts = await prisma.contact.findMany({
-        where: q
-          ? {
-              OR: [
-                { nome: { contains: String(q), mode: "insensitive" } },
-                { email: { contains: String(q), mode: "insensitive" } },
-              ],
-            }
-          : {},
-        skip: (Number(page) - 1) * Number(pageSize),
-        take: Number(pageSize),
-      });
+        if(q!='undefined') {
+            contacts = await prisma.contact.findMany({
+            where: q
+              ? {
+                  OR: [
+                    { nome: { contains: String(q), mode: "insensitive" } },
+                    { email: { contains: String(q), mode: "insensitive" } },
+                  ],
+                }
+              : {},
+            skip: (Number(page) - 1) * Number(pageSize),
+            take: Number(pageSize),
+          });}
     }
-    return { data: contacts, page: page, pageSize: pageSize, total: total };
+    return { data: contacts, page: page, pageSize: pageSize, total: total>0?total:0 };
   }
   async putContact(id: number, putContact: PutContactDTO): Promise<Contact> {
     try {
@@ -116,7 +117,7 @@ export class ContactService {
         }
       );
       if (emailDuplicado.length > 0) {
-        throw new Error("Email duplicado");
+          throw new Error("Email duplicado");
       }
       const cleanData = Object.fromEntries(
         Object.entries(putContact).filter(([_, v]) => v !== undefined)
