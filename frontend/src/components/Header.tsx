@@ -1,9 +1,12 @@
+import { Smartphone } from "lucide-react";
 function Header() {
   return (
-    <div className="bg-white h-[60px] w-[700px] flex items-center rounded-full justify-center gap-4">
-      <button className="font-bold text-center text-[14px]">Home</button>
-      <button className="font-bold text-center text-[14px]">About</button>
+<div className="bg-black p-6 border-b-gray-400 border ">
+    <div className="flex">
+        <Smartphone className="text-purple-500"></Smartphone>
+        <h1 className="text-white font-bold">My Contacts</h1>
     </div>
+</div>
   );
 }
 export default Header;
