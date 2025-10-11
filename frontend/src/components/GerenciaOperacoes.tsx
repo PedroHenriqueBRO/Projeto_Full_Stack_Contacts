@@ -105,11 +105,11 @@ function GerenciaOperacoes() {
       setLoading(false);
     }
   }, []);
-    return(<div className="h-screen flex flex-col">
+    return(<div className="h-screen w-screen flex flex-col">
         <Header></Header>
-        <div className="grid grid-cols-8 flex-grow">
+        <div className="grid grid-cols-8 flex-grow w-full">
             <BarraDeNavegacao setLayout={setLayout} layout={layout} getContacts={fetchContacts}></BarraDeNavegacao>
-            <div className=" col-span-5 md:col-span-7 bg-white flex flex-grow">
+            <div className=" col-span-5 md:col-span-7 bg-white flex-grow w-full">
                 <TelaDeCrud setLayout={setLayout} layout={layout} contacts={contatos} loading={loading} delete={deleteContacts} getContacts={fetchContacts} postContact={postContacts} ></TelaDeCrud>
             </div>
         </div>
