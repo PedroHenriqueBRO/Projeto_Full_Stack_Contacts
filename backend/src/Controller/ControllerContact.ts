@@ -121,6 +121,9 @@ router.get("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const { nome, email, phone } = req.body;
+    if (nome==="" && email==="" && phone==="") {
+        return res.json("Nenhuma atualização foi necessária")
+    }
   const idError = zodId.safeParse(id);
   const nomeError = zodName.safeParse(nome);
   const emailError = zodEmail.safeParse(email);
