@@ -1,14 +1,14 @@
-import {Plus} from "lucide-react";
+import {Pencil, Plus} from "lucide-react";
 import { Trash2 } from 'lucide-react';
 import type {PostContact,Contact} from "./GerenciaOperacoes.tsx";
 function TelaDeCrud(props){
-    let contatoaux:PostContact={nome:"",email:"",phone:""};
+    const contatoaux:PostContact={nome:"",email:"",phone:""};
     if(props.layout===0){
         return(<div></div>)
     }
     else if(props.layout===1){
-        return(<div className={"bg-white shadow-lg h-full w-full p-10 flex flex-col gap-2"}>
-            <div className={"grid grid-cols-2 w-ful"}>
+        return(<div className={"bg-white shadow-lg h-full p-10 flex flex-col gap-2"}>
+            <div className={"grid grid-cols-2 w-full"}>
                 <div className={"col-span-1"}><h1 className={"text-black text-[30px]"}>Contatos</h1></div>
                 <div className={"col-span-1 flex justify-end items-center w-full"}> <p className={""}>
                     <button className="
@@ -28,15 +28,15 @@ function TelaDeCrud(props){
                 </p>
                 </div>
             </div>
-        <div className={"flex-grow bg-gray-500 rounded-md grid grid-rows-15 border"}>
+        <div className={"bg-gray-500 rounded-md grid grid-rows-15 border"}>
 
-            <div className={'row-span-3 bg-gray-100 shadow-lg rounded-r-md sm:gap-10 md:gap-20 lg:gap-35 xl:gap-45 2xl:gap-70  rounded-l-md rounded-t-md rounded-b-none flex items-end '}>
+            <div className={'flex-grow flex-wrap row-span-3 bg-gray-100 shadow-lg rounded-r-md sm:gap-10 md:gap-20 lg:gap-35 xl:gap-45 2xl:gap-70  rounded-l-md rounded-t-md rounded-b-none flex items-end '}>
                 <h1 className={"ml-[17px]"}>Id</h1>
                 <h1>Name</h1>
                 <h1>Email</h1>
                 <h1 >Phone</h1>
             </div>
-            <div className={'row-span-10 bg-white shadow-lg rounded-b-none '}>
+            <div className={'row-span-10 bg-white shadow-lg rounded-b-none'}>
                 <ul>
                 {props.contacts.map((contact:Contact) =>{
                     return(<li className="py-2 text-gray-900 grid grid-cols-5">
@@ -46,13 +46,23 @@ function TelaDeCrud(props){
                             {contact.email}
                         </p>
                         <p className="text-sm text-gray-600">{contact.phone}</p>
-                        <p><Trash2 onClick={()=>{
+                        <div className={'flex'}><button
+                            title="Editar Registro"
+                            className="
+        p-1.5 rounded-full border border-gray-300
+        text-indigo-600
+        transition duration-150 ease-in-out
+
+        hover:bg-indigo-50 hover:border-indigo-400
+        focus:outline-none focus:ring-2 focus:ring-indigo-400
+    ">
+                            <Pencil size={18} />
+                        </button><Trash2 onClick={()=>{
                             props.delete(contact.id)
                             props.getContacts("",1,10)
 
                         }
-                        }></Trash2></p>
-
+                        }></Trash2></div>
                     </li>)
                 })
                 }
