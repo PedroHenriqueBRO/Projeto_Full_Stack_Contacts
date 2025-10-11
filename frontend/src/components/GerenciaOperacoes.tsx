@@ -40,7 +40,6 @@ function GerenciaOperacoes() {
         console.error("Erro na busca:", error);
       } finally {
         setLoading(false);
-        setLayout(1)
       }
     },
     []
@@ -80,7 +79,6 @@ function GerenciaOperacoes() {
         if (!response.ok) {
           throw new Error("Falha ao tentar atualizar contato na API.");
         }
-        setLayout(0);
       } catch (error) {
         console.error("Erro na atualização:", error);
       } finally {
@@ -110,7 +108,7 @@ function GerenciaOperacoes() {
         <div className="grid grid-cols-8 flex-grow w-full">
             <BarraDeNavegacao setLayout={setLayout} layout={layout} getContacts={fetchContacts}></BarraDeNavegacao>
             <div className=" col-span-5 md:col-span-7 bg-white flex-grow w-full">
-                <TelaDeCrud setLayout={setLayout} layout={layout} contacts={contatos} loading={loading} delete={deleteContacts} getContacts={fetchContacts} postContact={postContacts} ></TelaDeCrud>
+                <TelaDeCrud putContact={putContacts} setLayout={setLayout} layout={layout} contacts={contatos} loading={loading} delete={deleteContacts} getContacts={fetchContacts} postContact={postContacts} ></TelaDeCrud>
             </div>
         </div>
     </div>)
