@@ -1,7 +1,7 @@
 {
   "name": "contacts-app-fullstack",
   "scripts": {
-    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\""
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\" \"react-devtools\""
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
