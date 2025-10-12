@@ -111,7 +111,7 @@ export class ContactService {
           createdAt: Date;
           updatedAt: Date;
         }) => {
-          if (value.email === putContact.email) {
+          if (value.email === putContact.email && value.id!==id) {
             return true;
           }
         }
