@@ -16,9 +16,6 @@ export interface PostContact {
 function GerenciaOperacoes() {
     // eslint-disable-next-line prefer-const
   const [contatos, setContatos] = useState<Contact[]>();
-  const [page, setPage] = useState<number>(1);
-  const [pagemax, setPagesize] = useState<number>(10);
-  const [searchName, setSearchName] = useState<string>("");
   const [layout, setLayout] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const fetchContacts = useCallback(
