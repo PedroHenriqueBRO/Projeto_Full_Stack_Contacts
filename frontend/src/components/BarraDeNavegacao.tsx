@@ -1,6 +1,6 @@
 function BarraDeNavegacao(props){
-    return(<div className="col-span-3 md:col-span-1 bg-black p-4 gap-10 flex flex-col border-r-white border flex-grow">
-        <button className=" hover:text-gray-500 text-white" onClick={
+    return(<div className="col-span-3 md:col-span-1 bg-gray-800 p-4 gap-10 flex flex-col border flex-grow">
+        <button className=" hover:text-gray-500 text-gray-200" onClick={
             async ()=> {
                 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                 if(props.layout===0) {
