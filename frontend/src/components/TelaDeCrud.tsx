@@ -15,7 +15,7 @@ function TelaDeCrud(props){
         return(<div></div>)
     }
     else if(props.layout===1){
-        return(props.loading?<div className={"w-full h-full flex items-center justify-center"}> <h1 className={"text-[50px]"}>Carregando Contatos...</h1></div>:<div className={"bg-white shadow-lg h-full p-10 flex flex-col gap-2"}>
+        return(props.loading?<div className={"w-full h-full flex items-center justify-center"}> <h1 className={"text-[50px]"}>Carregando Contatos...</h1></div>:<div className={"bg-gray-50 shadow-lg h-full p-10 flex flex-col gap-2"}>
             <div className={"grid grid-cols-2 w-full"}>
                 <div className={"col-span-1"}><h1 className={"text-black text-[30px]"}>Contatos</h1></div>
                 <div className={"col-span-1 flex justify-end items-center w-full"}> <p className={""}>
@@ -36,19 +36,20 @@ function TelaDeCrud(props){
                 </p>
                 </div>
             </div>
-        <div className={"bg-gray-500 rounded-md grid grid-rows-15 border"}>
+        <div className={" rounded-md grid grid-rows-13 border border-gray-200 shadow-lg"}>
 
-            <div className={'flex-grow flex-wrap row-span-3 bg-gray-100 shadow-lg rounded-r-md sm:gap-10 md:gap-20 lg:gap-35 xl:gap-45 2xl:gap-70  rounded-l-md rounded-t-md rounded-b-none flex items-end '}>
+            <div className={'flex-grow flex-wrap row-span-1 rounded-r-md sm:gap-10 md:gap-20 lg:gap-35 xl:gap-45 2xl:gap-70  rounded-l-md rounded-t-md rounded-b-none flex items-end '}>
                 <h1 className="ml-[17px]">Name</h1>
                 <h1>Email</h1>
                 <h1 >Phone</h1>
             </div>
-            <div className={'row-span-10 bg-white shadow-lg rounded-b-none'}>
+
+            <div className={'row-span-11 bg-white shadow-lg rounded-b-none'}>
                 <ul>
 
                 {
                         props.contacts.map((contact:Contact) =>{
-                        return(<li className="py-2 text-gray-900 grid grid-cols-5">
+                        return(<li className="py-2 text-gray-900 grid grid-cols-5 border-b border-gray-200">
                             <p className="font-bold">{contact.nome}</p>
                             <p className="text-sm text-gray-600">
                                 {contact.email}
@@ -68,18 +69,21 @@ function TelaDeCrud(props){
                                 setId(contact.id);props.setLayout(3)}}>
                                 <Pencil size={18} />
                             </button>
-                                <Trash2 onClick={async ()=>{
-                                await props.delete(contact.id)
-                                props.getContacts("",1,10)
-
-                            }
-                            }></Trash2></div>
+                                <button className={"border rounded-md hover:bg-red-500"} onClick={async ()=>{
+                                    await props.delete(contact.id)
+                                    props.getContacts("",1,10)
+                                }
+                                }>
+                                <Trash2></Trash2>
+                            </button>
+                            </div>
                         </li>)
                     })
                 }
                 </ul>
             </div>
-            <div className={'row-span-2 bg-gray-100 rounded-r-md shadow-lg rounded-l-md rounded-b-md rounded-tl-none rounded-tr-none flex justify-end gap-2'}>
+
+            <div className={'row-span-1 rounded-r-md rounded-l-md rounded-b-md rounded-tl-none rounded-tr-none flex justify-end gap-2'}>
                 <p className={"mt-2"}>Rows per page: </p>
                 <div><input
                     type="number"
@@ -95,7 +99,7 @@ function TelaDeCrud(props){
                 onChange={(e)=>setPageSize(e.target.value as unknown as number)}
                 />
                 </div>
-                <div ><button
+                <div className={"mr-3"}><button
                     title="Confirmar Atualização"
                     className=" mt-1
                                     p-1.5 rounded-full border border-gray-300
@@ -111,11 +115,11 @@ function TelaDeCrud(props){
                     props.getContacts("",1,pageSizeAux===''?10:pageSizeAux)
                     setPage(1)
                 }}>
-                    <Check size={18} />
+                    <Check size={18}/>
 
                 </button></div>
-                <div className={"flex gap-5"}>
-                <ChevronLeft className={"mt-2 border rounded-full"} onClick={()=>{
+                <div className={"flex gap-2 mr-3"}>
+                <ChevronLeft className={"mt-2 border rounded-full hover:size-7"} onClick={()=>{
                     if(page-1!==0) {
                         setPage(page - 1)
                         const newPage = page - 1
@@ -123,7 +127,8 @@ function TelaDeCrud(props){
                         props.getContacts("", newPage, pageSize===''?10:pageSize)
                     }
                 }}></ChevronLeft>
-                <ChevronRight className={"mt-2 border rounded-full"} onClick={ ()=>{
+                    <p className={"mt-2"}>{page}</p>
+                <ChevronRight className={"mt-2 border rounded-full hover:size-7"} onClick={ ()=>{
                     setPage(page + 1)
                     const newPage = page + 1
                     // @ts-ignore
@@ -142,7 +147,7 @@ function TelaDeCrud(props){
                     <h1 className={"font-extralight"}>Contatos / New</h1>
                 </div>
                 <div className={"col-span-1"}><h1 className={"text-black text-[30px]"}>Criar Contato</h1></div>
-                <div className={" w-full h-[300px] bg-gray-100 rounded-md"}>
+                <div className={" w-full h-[300px] bg-gray-100 border-gray-200 shadow-lg rounded-md"}>
                     <div className={"grid grid-rows-6 "}>
                         <h1 className={'text-center h-[22px]'}>Nome</h1>
                         <div className={"justify-center flex"}><input className={"bg-gray-300 rounded-md border text-center w-[250px]"} onChange={(e)=>contatoaux.nome=e.target.value} /></div>
@@ -209,7 +214,7 @@ function TelaDeCrud(props){
                 </p>
                 </div>
             </div>
-            <div className={"bg-gray-500 rounded-md grid grid-rows-15 border"}>
+            <div className={"border-gray-200 shadow-lg grid grid-rows-15 border"}>
 
                 <div className={'flex-grow flex-wrap row-span-3 bg-gray-100 shadow-lg rounded-r-md sm:gap-10 md:gap-20 lg:gap-35 xl:gap-45 2xl:gap-70  rounded-l-md rounded-t-md rounded-b-none flex items-end '}>
                     <h1 className="ml-[17px]">Name</h1>
