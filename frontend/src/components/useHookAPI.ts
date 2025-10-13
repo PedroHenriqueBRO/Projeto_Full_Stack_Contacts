@@ -12,7 +12,9 @@ export default function useHookAPI() {
       sort: string,
       order: string
     ) => {
-      const url = `http://localhost:8082/contacts?q=${name}&page=${page}&pageSize=${pagesize}&sort=${sort}&order=${order}`;
+      const url = `${
+        import.meta.env.VITE_API_BASE_URL
+      }/contacts?q=${name}&page=${page}&pageSize=${pagesize}&sort=${sort}&order=${order}`;
       setLoading(true);
       try {
         const response = await fetch(url);
@@ -31,7 +33,7 @@ export default function useHookAPI() {
   );
   const postContacts = useCallback(
     async (contato: PostContact) => {
-      const url = `http://localhost:8082/contacts`;
+      const url = `${import.meta.env.VITE_API_BASE_URL}/contacts`;
       setLoading(true);
       try {
         const response = await fetch(url, {
@@ -54,7 +56,7 @@ export default function useHookAPI() {
   );
   const putContacts = useCallback(
     async (contato: Contact, id: number) => {
-      const url = `http://localhost:8082/contacts/${id}`;
+      const url = `${import.meta.env.VITE_API_BASE_URL}/contacts/${id}`;
       setLoading(true);
       try {
         const response = await fetch(url, {
@@ -77,7 +79,7 @@ export default function useHookAPI() {
   );
   const deleteContacts = useCallback(
     async (id: number) => {
-      const url = `http://localhost:8082/contacts/${id}`;
+      const url = `${import.meta.env.VITE_API_BASE_URL}/contacts/${id}`;
       setLoading(true);
       try {
         const response = await fetch(url, {
