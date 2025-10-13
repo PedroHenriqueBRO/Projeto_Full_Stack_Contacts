@@ -30,7 +30,6 @@ function TelaDeCrud(props: {
   const [pageSize, setPageSize] = useState<number>(10);
   const [procurar, setProcurar] = useState<boolean>(false);
   let q: string = "";
-  const [pageSizeAux, setPageSizeAux] = useState<number>(pageSize);
   const [sort, setSort] = useState<string>("none");
   const [order, setOrder] = useState<string>("asc");
 
@@ -53,7 +52,6 @@ function TelaDeCrud(props: {
               setId(-1);
               setPage(1);
               setPageSize(10);
-              setPageSizeAux(pageSize);
               setSort("none");
               setOrder("none");
               setProcurar(false);
@@ -96,7 +94,6 @@ function TelaDeCrud(props: {
                       setId(-1);
                       setPage(1);
                       setPageSize(10);
-                      setPageSizeAux(pageSize);
                       setSort("none");
                       setOrder("none");
                       q = "";
@@ -123,7 +120,6 @@ function TelaDeCrud(props: {
                 setId(-1);
                 setPage(1);
                 setPageSize(10);
-                setPageSizeAux(pageSize);
                 setSort("none");
                 setOrder("none");
                 setProcurar(false);
@@ -174,16 +170,20 @@ function TelaDeCrud(props: {
                 return (
                   <li className="py-2 text-gray-900 grid grid-cols-5 border-b border-gray-200 xl:gap-30 2xl:gap-45 ">
                     <div>
-                      <p className="font-bold ml-7">{contact.nome}</p>
+                      <p className="font-bold text-center">{contact.nome}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">{contact.email}</p>
+                      <p className="text-sm text-gray-600 text-center">
+                        {contact.email}
+                      </p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">{contact.phone}</p>
+                      <p className="text-sm text-gray-600 text-center">
+                        {contact.phone}
+                      </p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-gray-600 text-center w-[200px]">
                         {contact.createdAt.slice(0, 19)}
                       </p>
                     </div>
@@ -315,7 +315,6 @@ function TelaDeCrud(props: {
                   onClick={async () => {
                     const pageSizeAux = pageSize;
                     setPageSize(pageSizeAux);
-                    setPageSizeAux(pageSizeAux);
                     props.getContacts("", 1, pageSizeAux, sort, order);
                     setPage(1);
                   }}
@@ -339,7 +338,6 @@ function TelaDeCrud(props: {
                   className={"mt-2 border rounded-full hover:size-7"}
                   onClick={async () => {
                     const newPage = page + 1;
-                    console.log(page, pageSize, pageSizeAux);
                     props.getContacts("", newPage, pageSize, sort, order);
                     setPage(page + 1);
                   }}
