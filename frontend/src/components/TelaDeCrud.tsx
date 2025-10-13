@@ -7,6 +7,7 @@ import { X } from "lucide-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Search } from "lucide-react";
 import { RefreshCw } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 function TelaDeCrud(props: {
   layout: number;
   loading: boolean;
@@ -45,7 +46,6 @@ function TelaDeCrud(props: {
       <div className={"bg-gray-50 shadow-lg h-full p-10 flex flex-col gap-2"}>
         <div>
           <button
-            className={"rounded-full border hover:bg-red-400"}
             onClick={() => {
               props.setLayout(0);
               setEditar(false);
@@ -57,7 +57,7 @@ function TelaDeCrud(props: {
               setProcurar(false);
             }}
           >
-            <X></X>
+            <ArrowLeft className="hover:size-[27px]"></ArrowLeft>
           </button>
         </div>
         <div className={"grid grid-cols-2 w-full"}>
