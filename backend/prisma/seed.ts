@@ -53,8 +53,12 @@ const seedContactsEmbaralhados:{nome:string,email:string,phone:string}[] = [
         phone: "+55 91 97070 7070",
     },
 ];
+function esperar(ms:number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 async function main() {
   for (const contato of seedContactsEmbaralhados) {
+
     await prisma.contact.upsert({
       where: { email: contato.email },
       update: {},
@@ -64,6 +68,7 @@ async function main() {
         phone: contato.phone,
       },
     });
+    await esperar(1000)
   }
 }
 
