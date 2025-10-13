@@ -2,21 +2,9 @@ import { useCallback, useState } from "react";
 import Header from "./Header.tsx";
 import BarraDeNavegacao from "./BarraDeNavegacao.tsx";
 import TelaDeCrud from "./TelaDeCrud.tsx";
-export interface Contact {
-    id?: number;
-  nome: string;
-  email: string;
-  phone: string;
-  createdAt: string;
-}
-export interface PostContact {
-    nome: string;
-    email: string;
-    phone: string;
-}
+import type { Contact, PostContact } from "./ContactsInterfaces.tsx";
 function GerenciaOperacoes() {
-    // eslint-disable-next-line prefer-const
-  const [contatos, setContatos] = useState<Contact[]>();
+  const [contatos, setContatos] = useState<Contact[]>([]);
   const [layout, setLayout] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const fetchContacts = useCallback(
@@ -44,7 +32,7 @@ function GerenciaOperacoes() {
     },
     []
   );
-  const postContacts = useCallback(async (contato:PostContact) => {
+  const postContacts = useCallback(async (contato: PostContact) => {
     const url = `http://localhost:8082/contacts`;
     setLoading(true);
     try {
@@ -64,30 +52,27 @@ function GerenciaOperacoes() {
       setLoading(false);
     }
   }, []);
-  const putContacts = useCallback(
-    async (contato: Contact | undefined,id:number) => {
-      const url = `http://localhost:8082/contacts/${id}`;
-      setLoading(true);
-      try {
-        const response = await fetch(url, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(contato),
-        });
-        if (!response.ok) {
-          throw new Error("Falha ao tentar atualizar contato na API.");
-        }
-      } catch (error) {
-        console.error("Erro na atualização:", error);
-      } finally {
-        setLoading(false);
+  const putContacts = useCallback(async (contato: Contact, id: number) => {
+    const url = `http://localhost:8082/contacts/${id}`;
+    setLoading(true);
+    try {
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(contato),
+      });
+      if (!response.ok) {
+        throw new Error("Falha ao tentar atualizar contato na API.");
       }
-    },
-    []
-  );
-  const deleteContacts = useCallback(async (id:number) => {
+    } catch (error) {
+      console.error("Erro na atualização:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+  const deleteContacts = useCallback(async (id: number) => {
     const url = `http://localhost:8082/contacts/${id}`;
     setLoading(true);
     try {
@@ -103,15 +88,29 @@ function GerenciaOperacoes() {
       setLoading(false);
     }
   }, []);
-    return(<div className="h-screen w-screen flex flex-col">
-        <Header></Header>
-        <div className="grid grid-cols-8 flex-grow w-full overflow-x-hidden overflow-y-hidden ">
-            <BarraDeNavegacao setLayout={setLayout} layout={layout} getContacts={fetchContacts}></BarraDeNavegacao>
-            <div className=" col-span-5 md:col-span-7 bg-white flex-grow w-full border border-t-black">
-                <TelaDeCrud putContact={putContacts} setLayout={setLayout} layout={layout} contacts={contatos} loading={loading} delete={deleteContacts} getContacts={fetchContacts} postContact={postContacts} ></TelaDeCrud>
-            </div>
+  return (
+    <div className="h-screen w-screen flex flex-col">
+      <Header></Header>
+      <div className="grid grid-cols-8 flex-grow w-full overflow-x-hidden overflow-y-hidden ">
+        <BarraDeNavegacao
+          setLayout={setLayout}
+          layout={layout}
+          getContacts={fetchContacts}
+        ></BarraDeNavegacao>
+        <div className=" col-span-5 md:col-span-7 bg-white flex-grow w-full border border-t-black">
+          <TelaDeCrud
+            putContact={putContacts}
+            setLayout={setLayout}
+            layout={layout}
+            contacts={contatos}
+            loading={loading}
+            delete={deleteContacts}
+            getContacts={fetchContacts}
+            postContact={postContacts}
+          ></TelaDeCrud>
         </div>
-    </div>)
-
+      </div>
+    </div>
+  );
 }
 export default GerenciaOperacoes;
