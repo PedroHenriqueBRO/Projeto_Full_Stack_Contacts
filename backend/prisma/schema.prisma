@@ -10,7 +10,7 @@ datasource db {
 model Contact {
   id        Int      @id @default(autoincrement())
   nome      String
-  phone     String
+  phone     String @unique 
   createdAt DateTime @default(now())
   email     String @unique
   updatedAt DateTime @updatedAt
