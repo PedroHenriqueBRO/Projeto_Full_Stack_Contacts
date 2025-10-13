@@ -18,9 +18,7 @@ const zodPageAndPageSize = z
   .string()
   .transform((val) => Number(val))
   .pipe(z.number().int().positive());
-const zodSort = z
-  .string()
-  .optional();
+const zodSort = z.string().optional();
 const zodOrder = z.string().optional();
 export const router = Router();
 const cService = new ContactService();
@@ -61,53 +59,56 @@ router.post("/", async (req, res) => {
     });
     res.json(await contact);
   } catch (erro: any) {
-    if (erro.message === "Email duplicado") {
+    if (erro.message === "Email duplicado!") {
       return res.status(409).json({ error: "Email duplicado!" });
+    }
+    if (erro.message === "Phone duplicado!") {
+      return res.status(409).json({ error: "Phone duplicado!" });
     }
   }
 });
 router.get("/", async (req, res) => {
   const { q, page = 1, pageSize = 10, sort, order } = req.query;
-    if (Object.keys(req.query).length !== 0) {
-      const qError = zodQ.safeParse(q);
-      const pageError = zodPageAndPageSize.safeParse(page);
-      const pageSizeError = zodPageAndPageSize.safeParse(pageSize);
-      const sortError = zodSort.safeParse(sort);
-      const orderError = zodOrder.safeParse(order);
-      const validationErrors: { path: string; message: string }[] = [];
-      if (!qError.success) {
-        qError.error.issues.forEach((issue) =>
-          validationErrors.push({ path: "q", message: issue.message })
-        );
-      }
-      if (!pageError.success) {
-        pageError.error.issues.forEach((issue) =>
-          validationErrors.push({ path: "page", message: issue.message })
-        );
-      }
-      if (!pageSizeError.success) {
-        pageSizeError.error.issues.forEach((issue) =>
-          validationErrors.push({ path: "pageSize", message: issue.message })
-        );
-      }
-      if (!sortError.success) {
-        sortError.error.issues.forEach((issue) =>
-          validationErrors.push({ path: "sort", message: issue.message })
-        );
-      }
-      if (!orderError.success) {
-        orderError.error.issues.forEach((issue) =>
-          validationErrors.push({ path: "order", message: issue.message })
-        );
-      }
-
-      if (validationErrors.length > 0) {
-        return res.status(400).json({
-          error: "Falha na validação dos dados.",
-          details: validationErrors,
-        });
-      }
+  if (Object.keys(req.query).length !== 0) {
+    const qError = zodQ.safeParse(q);
+    const pageError = zodPageAndPageSize.safeParse(page);
+    const pageSizeError = zodPageAndPageSize.safeParse(pageSize);
+    const sortError = zodSort.safeParse(sort);
+    const orderError = zodOrder.safeParse(order);
+    const validationErrors: { path: string; message: string }[] = [];
+    if (!qError.success) {
+      qError.error.issues.forEach((issue) =>
+        validationErrors.push({ path: "q", message: issue.message })
+      );
     }
+    if (!pageError.success) {
+      pageError.error.issues.forEach((issue) =>
+        validationErrors.push({ path: "page", message: issue.message })
+      );
+    }
+    if (!pageSizeError.success) {
+      pageSizeError.error.issues.forEach((issue) =>
+        validationErrors.push({ path: "pageSize", message: issue.message })
+      );
+    }
+    if (!sortError.success) {
+      sortError.error.issues.forEach((issue) =>
+        validationErrors.push({ path: "sort", message: issue.message })
+      );
+    }
+    if (!orderError.success) {
+      orderError.error.issues.forEach((issue) =>
+        validationErrors.push({ path: "order", message: issue.message })
+      );
+    }
+
+    if (validationErrors.length > 0) {
+      return res.status(400).json({
+        error: "Falha na validação dos dados.",
+        details: validationErrors,
+      });
+    }
+  }
   const contactsObj = cService.getContacts(
     String(q),
     Number(page),
@@ -120,9 +121,9 @@ router.get("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const { nome, email, phone } = req.body;
-    if (nome==="" && email==="" && phone==="") {
-        return res.json("Nenhuma atualização foi necessária")
-    }
+  if (nome === "" && email === "" && phone === "") {
+    return res.json("Nenhuma atualização foi necessária");
+  }
   const idError = zodId.safeParse(id);
   const nomeError = zodName.safeParse(nome);
   const emailError = zodEmail.safeParse(email);
@@ -163,7 +164,7 @@ router.put("/:id", async (req, res) => {
     });
     res.json(await contact);
   } catch (erro: any) {
-    if (erro.message === "Email duplicado") {
+    if (erro.message === "Email duplicado!") {
       return res.status(409).json({ error: "Email duplicado!" });
     }
     if (erro.message === "InternalError") {
