@@ -20,7 +20,6 @@ const zodPageAndPageSize = z
   .pipe(z.number().int().positive());
 const zodSort = z
   .string()
-  .refine((value) => value === "name" || value === "createdAt")
   .optional();
 const zodOrder = z.string().optional();
 export const router = Router();
