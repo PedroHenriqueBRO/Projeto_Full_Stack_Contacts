@@ -7,8 +7,8 @@ export default function useHookAPI() {
   const fetchContacts = useCallback(
     async (
       name: string,
-      page: number | undefined,
-      pagesize: number | undefined,
+      page: number,
+      pagesize: number,
       sort: string,
       order: string
     ) => {
