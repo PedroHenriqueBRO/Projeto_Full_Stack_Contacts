@@ -23,6 +23,23 @@ export class ContactService {
     if (emailDuplicado.length > 0) {
       throw new Error("Email duplicado!");
     }
+    const phoneDuplicado = contacts.filter(
+      (value: {
+        id: any;
+        nome: string;
+        email: string;
+        phone: string;
+        createdAt: Date;
+        updatedAt: Date;
+      }) => {
+        if (value.phone === data.phone) {
+          return true;
+        }
+      }
+    );
+    if (phoneDuplicado.length > 0) {
+      throw new Error("Phone duplicado!");
+    }
     const contact = await prisma.contact.create({
       data: {
         nome: data.nome,
@@ -123,7 +140,7 @@ export class ContactService {
         }
       );
       if (emailDuplicado.length > 0) {
-        throw new Error("Email duplicado");
+        throw new Error("Email duplicado!");
       }
       const cleanData = Object.fromEntries(
         Object.entries(putContact).filter(([_, v]) => v !== undefined)
