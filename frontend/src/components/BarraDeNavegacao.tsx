@@ -4,18 +4,13 @@ function BarraDeNavegacao(props){
         <div className={" flex  flex-col w-full gap-1"}>
             <div className={"ml-2 flex flex-row justify-center"} >
                 <User className={"mt-1 text-white"}></User>
-                <button className=" hover:text-gray-500 text-white " onClick={
+                {props.layout===0?<button className=" hover:text-gray-500 text-white " onClick={
             async ()=> {
-                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                if(props.layout===0) {
                     props.setLayout(1)
                    props.getContacts("",1,10)
-                }else {
-                    props.setLayout(0);
-                }
-
-            }
-        }><h1 className={"text-[20px]"}>Contatos</h1></button></div></div>
+            }}
+        ><h1 className={"text-[20px]"}>Contatos</h1></button>:<button className=" text-white "
+                    ><h1 className={"text-[20px]"}>Contatos</h1></button>}</div></div>
     </div>)
 }
 export default BarraDeNavegacao;
