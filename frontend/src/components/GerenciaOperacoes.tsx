@@ -7,6 +7,7 @@ export interface Contact {
   nome: string;
   email: string;
   phone: string;
+  createdAt: string;
 }
 export interface PostContact {
     nome: string;
@@ -22,9 +23,11 @@ function GerenciaOperacoes() {
     async (
       name: string,
       page: number | undefined,
-      pagesize: number | undefined
+      pagesize: number | undefined,
+      sort: string,
+      order: string
     ) => {
-      const url = `http://localhost:8082/contacts?q=${name}&page=${page}&pageSize=${pagesize}`;
+      const url = `http://localhost:8082/contacts?q=${name}&page=${page}&pageSize=${pagesize}&sort=${sort}&order=${order}`;
       setLoading(true);
       try {
         const response = await fetch(url);
