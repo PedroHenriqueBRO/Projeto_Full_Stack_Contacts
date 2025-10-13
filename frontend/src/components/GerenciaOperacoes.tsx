@@ -1,93 +1,19 @@
-import { useCallback, useState } from "react";
 import Header from "./Header.tsx";
 import BarraDeNavegacao from "./BarraDeNavegacao.tsx";
 import TelaDeCrud from "./TelaDeCrud.tsx";
-import type { Contact, PostContact } from "./ContactsInterfaces.tsx";
+import useHookApi from "./useHookAPI.ts";
 function GerenciaOperacoes() {
-  const [contatos, setContatos] = useState<Contact[]>([]);
-  const [layout, setLayout] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(false);
-  const fetchContacts = useCallback(
-    async (
-      name: string,
-      page: number | undefined,
-      pagesize: number | undefined,
-      sort: string,
-      order: string
-    ) => {
-      const url = `http://localhost:8082/contacts?q=${name}&page=${page}&pageSize=${pagesize}&sort=${sort}&order=${order}`;
-      setLoading(true);
-      try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error("Falha ao buscar contatos na API.");
-        }
-        const data = await response.json();
-        setContatos(data.data as Contact[]);
-      } catch (error) {
-        console.error("Erro na busca:", error);
-      } finally {
-        setLoading(false);
-      }
-    },
-    []
-  );
-  const postContacts = useCallback(async (contato: PostContact) => {
-    const url = `http://localhost:8082/contacts`;
-    setLoading(true);
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(contato),
-      });
-      if (!response.ok) {
-        throw new Error("Falha ao tentar criar contato na API.");
-      }
-    } catch (error) {
-      console.error("Erro na criação:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-  const putContacts = useCallback(async (contato: Contact, id: number) => {
-    const url = `http://localhost:8082/contacts/${id}`;
-    setLoading(true);
-    try {
-      const response = await fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(contato),
-      });
-      if (!response.ok) {
-        throw new Error("Falha ao tentar atualizar contato na API.");
-      }
-    } catch (error) {
-      console.error("Erro na atualização:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-  const deleteContacts = useCallback(async (id: number) => {
-    const url = `http://localhost:8082/contacts/${id}`;
-    setLoading(true);
-    try {
-      const response = await fetch(url, {
-        method: "DELETE",
-      });
-      if (!response.ok) {
-        throw new Error("Falha ao tentar deletar contato na API.");
-      }
-    } catch (error) {
-      console.error("Erro na deleção:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const {
+    fetchContacts,
+    postContacts,
+    putContacts,
+    deleteContacts,
+    contatos,
+    layout,
+    setLayout,
+    loading,
+  } = useHookApi();
+
   return (
     <div className="h-screen w-screen flex flex-col">
       <Header></Header>
