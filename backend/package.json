@@ -4,10 +4,11 @@
   "description": "Backend para aplicação de contatos com Express e Prisma",
   "main": "src/index.ts",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "dev": "npm run migrate:seed && ts-node-dev --respawn --transpile-only src/index.ts",
     "start": "ts-node src/index.ts",
-    "prisma:dev": "npx prisma migrate dev",
-    "prisma:seed": "npx prisma db seed"
+    "prisma:generate": "npx prisma generate --no-engine",
+    "migrate:seed": "npx prisma migrate dev --name init && npm run prisma:generate",
+    "seed": "ts-node prisma/seed.ts"
   },
   "keywords": [
     "prisma",
@@ -19,6 +20,7 @@
   "dependencies": {
     "@prisma/client": "^6.17.0",
     "@prisma/extension-accelerate": "^2.0.2",
+    "contacts-app-fullstack": "file:..",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
@@ -33,6 +35,6 @@
     "typescript": "^5.9.3"
   },
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "npm run seed"
   }
 }
