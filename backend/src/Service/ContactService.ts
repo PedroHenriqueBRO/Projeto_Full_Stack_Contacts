@@ -52,7 +52,7 @@ export class ContactService {
           }
         : {},
     });
-    if (nameOrcreatedAt === "name" ) {
+    if (nameOrcreatedAt === "name") {
       const orderBy = order == "asc" ? "asc" : "desc";
       contacts = await prisma.contact.findMany({
         where: q
@@ -83,7 +83,7 @@ export class ContactService {
         take: Number(pageSize),
       });
     } else {
-        if(q!='undefined') {
+        if(q!=='undefined') {
             contacts = await prisma.contact.findMany({
             where: q
               ? {
