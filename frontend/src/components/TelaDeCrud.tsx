@@ -35,11 +35,16 @@ function TelaDeCrud(props: {
   const [nomeError, setNomeError] = useState<string>("");
   const [emailError, setEmailError] = useState<string>("");
   const [phoneError, setPhoneError] = useState<string>("");
+  const [serverError, setServerError] = useState<string>("");
   const [qError, setQError] = useState<string>("");
   const [pageSizeError, setPageSizeError] = useState<string>("");
   const [nome, setNome] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
+  // estados locais para edição (evitar mutar lista original)
+  const [editNome, setEditNome] = useState<string>("");
+  const [editEmail, setEditEmail] = useState<string>("");
+  const [editPhone, setEditPhone] = useState<string>("");
 
   function validateNome(value: string) {
     if (!value || value.trim() === "") return "Nome é obrigatório.";
@@ -242,6 +247,10 @@ function TelaDeCrud(props: {
                         onClick={() => {
                           setEditar(true);
                           setId(contact.id);
+                          setEditNome(contact.nome);
+                          setEditEmail(contact.email);
+                          setEditPhone(contact.phone);
+                          setServerError("");
                           props.setLayout(3);
                         }}
                       >
@@ -478,6 +487,7 @@ function TelaDeCrud(props: {
                     setNome("");
                     setEmail("");
                     setPhone("");
+                    setServerError("");
                   }}
                 >
                   <X></X>
@@ -504,7 +514,16 @@ function TelaDeCrud(props: {
                     setEmailError(eError);
                     setPhoneError(pError);
                     if (nError || eError || pError) return;
-                    await props.postContact({ nome, email, phone });
+                    try {
+                      await props.postContact({ nome, email, phone });
+                    } catch (e: any) {
+                      if (e?.message === "Email duplicado!" || e?.message === "Phone duplicado!") {
+                        setServerError(e.message);
+                        return;
+                      }
+                      setServerError("Erro ao criar contato.");
+                      return;
+                    }
                     props.getContacts("", page, pageSize, sort, order);
                     props.setLayout(1);
                     setNome("");
@@ -513,6 +532,7 @@ function TelaDeCrud(props: {
                     setNomeError("");
                     setEmailError("");
                     setPhoneError("");
+                    setServerError("");
                   }}
                 >
                   <Plus size={16} className="text-gray-500" />
@@ -521,6 +541,9 @@ function TelaDeCrud(props: {
               </div>
             </div>
           </div>
+          {serverError && (
+            <div className="text-center text-red-700 text-sm mt-2">{serverError}</div>
+          )}
         </div>
       </div>
     );
@@ -561,6 +584,9 @@ function TelaDeCrud(props: {
             </p>
           </div>
         </div>
+        {serverError && (
+          <div className="text-center text-red-700 text-sm mb-2">{serverError}</div>
+        )}
         <div className={"border-gray-200 shadow-lg grid grid-rows-15 border"}>
           <div
             className={
@@ -579,18 +605,18 @@ function TelaDeCrud(props: {
                     <li className="py-2 text-gray-900 grid grid-cols-4">
                       <input
                         className="font-bold "
-                        placeholder={contact.nome}
-                        onChange={(e) => (contact.nome = e.target.value)}
+                        value={editNome}
+                        onChange={(e) => setEditNome(e.target.value)}
                       ></input>
                       <input
                         className="text-sm text-gray-600"
-                        placeholder={contact.email}
-                        onChange={(e) => (contact.email = e.target.value)}
+                        value={editEmail}
+                        onChange={(e) => setEditEmail(e.target.value)}
                       ></input>
                       <input
                         className="text-sm text-gray-600"
-                        placeholder={contact.phone}
-                        onChange={(e) => (contact.phone = e.target.value)}
+                        value={editPhone}
+                        onChange={(e) => setEditPhone(e.target.value)}
                       ></input>
                       <div className={"flex items-center gap-3"}>
                         <button
@@ -604,13 +630,23 @@ function TelaDeCrud(props: {
                                     hover:bg-indigo-50 hover:border-indigo-400
                                     focus:outline-none focus:ring-2 focus:ring-indigo-400
                                 "
-                          onClick={async () => {
-                            await props.putContact(contact, contact.id);
-                            props.getContacts("", page, pageSize, sort, order);
-                            setId(-1);
-                            setEditar(false);
-                            props.setLayout(1);
-                          }}
+                        onClick={async () => {
+                          setServerError("");
+                          try {
+                            await props.putContact({ ...contact, nome: editNome, email: editEmail, phone: editPhone }, contact.id);
+                          } catch (e: any) {
+                            if (e?.message === "Email duplicado!" || e?.message === "Phone duplicado!") {
+                              setServerError(e.message);
+                              return;
+                            }
+                            setServerError("Erro ao atualizar contato.");
+                            return;
+                          }
+                          props.getContacts("", page, pageSize, sort, order);
+                          setId(-1);
+                          setEditar(false);
+                          props.setLayout(1);
+                        }}
                         >
                           <Check size={18} />
                         </button>
@@ -618,6 +654,7 @@ function TelaDeCrud(props: {
                           onClick={() => {
                             setId(-1);
                             setEditar(false);
+                            setServerError("");
                             props.setLayout(1);
                           }}
                         ></X>
