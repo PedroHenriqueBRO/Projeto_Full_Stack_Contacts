@@ -167,6 +167,9 @@ router.put("/:id", async (req, res) => {
     if (erro.message === "Email duplicado!") {
       return res.status(409).json({ error: "Email duplicado!" });
     }
+    if (erro.message === "Phone duplicado!") {
+      return res.status(409).json({ error: "Phone duplicado!" });
+    }
     if (erro.message === "InternalError") {
       return res.status(500).json({ error: "InternalError" });
     }
