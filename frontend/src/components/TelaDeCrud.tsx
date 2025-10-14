@@ -62,21 +62,22 @@ function TelaDeCrud(props: {
     return "";
   }
   function validateQ(value: string) {
-    if (value.length > 100) return "Busca (q) deve ter no máximo 100 caracteres.";
+    if (value.length > 100)
+      return "Busca (q) deve ter no máximo 100 caracteres.";
     return "";
   }
   function validatePageSize(value: number) {
-    if (!Number.isInteger(value) || value <= 0) return "pageSize deve ser um inteiro positivo.";
+    if (!Number.isInteger(value) || value <= 0)
+      return "pageSize deve ser um inteiro positivo.";
     if (value > 10) return "pageSize máximo é 10.";
     return "";
   }
 
   if (props.layout === 0) {
     return <div></div>;
-
   }
   //Tela de listar contatos
-   else if (props.layout === 1) {
+  else if (props.layout === 1) {
     return props.loading ? (
       <div className={"w-full h-full flex items-center justify-center"}>
         {" "}
@@ -168,6 +169,18 @@ function TelaDeCrud(props: {
                 setSort("none");
                 setOrder("none");
                 setProcurar(false);
+                setEditEmail("");
+                setEditPhone("");
+                setEditNome("");
+                setEmail("");
+                setEmailError("");
+                setNome("");
+                setNomeError("");
+                setPageSizeError("");
+                setPhone("");
+                setPhoneError("");
+                setQError("");
+                setServerError("");
               }}
             >
               <RefreshCw className={"hover:size-7"}></RefreshCw>
@@ -453,7 +466,9 @@ function TelaDeCrud(props: {
                   }}
                 />
                 {emailError && (
-                  <span className="text-red-600 text-xs mt-1">{emailError}</span>
+                  <span className="text-red-600 text-xs mt-1">
+                    {emailError}
+                  </span>
                 )}
               </div>
 
@@ -470,7 +485,9 @@ function TelaDeCrud(props: {
                   }}
                 />
                 {phoneError && (
-                  <span className="text-red-600 text-xs mt-1">{phoneError}</span>
+                  <span className="text-red-600 text-xs mt-1">
+                    {phoneError}
+                  </span>
                 )}
               </div>
             </div>
@@ -507,7 +524,7 @@ function TelaDeCrud(props: {
                         "
                   onClick={async () => {
                     const nError = validateNome(nome);
-                    const eError= validateEmail(email);
+                    const eError = validateEmail(email);
                     const pError = validatePhone(phone);
                     setNomeError(nError);
                     setEmailError(eError);
@@ -516,7 +533,10 @@ function TelaDeCrud(props: {
                     try {
                       await props.postContact({ nome, email, phone });
                     } catch (e: any) {
-                      if (e?.message === "Email duplicado!" || e?.message === "Phone duplicado!") {
+                      if (
+                        e?.message === "Email duplicado!" ||
+                        e?.message === "Phone duplicado!"
+                      ) {
                         setServerError(e.message);
                         return;
                       }
@@ -541,7 +561,9 @@ function TelaDeCrud(props: {
             </div>
           </div>
           {serverError && (
-            <div className="text-center text-red-700 text-sm mt-2">{serverError}</div>
+            <div className="text-center text-red-700 text-sm mt-2">
+              {serverError}
+            </div>
           )}
         </div>
       </div>
@@ -584,7 +606,9 @@ function TelaDeCrud(props: {
           </div>
         </div>
         {serverError && (
-          <div className="text-center text-red-700 text-sm mb-2">{serverError}</div>
+          <div className="text-center text-red-700 text-sm mb-2">
+            {serverError}
+          </div>
         )}
         <div className={"border-gray-200 shadow-lg grid grid-rows-15 border"}>
           <div
@@ -629,23 +653,34 @@ function TelaDeCrud(props: {
                                     hover:bg-indigo-50 hover:border-indigo-400
                                     focus:outline-none focus:ring-2 focus:ring-indigo-400
                                 "
-                        onClick={async () => {
-                          setServerError("");
-                          try {
-                            await props.putContact({ ...contact, nome: editNome, email: editEmail, phone: editPhone }, contact.id);
-                          } catch (e: any) {
-                            if (e?.message === "Email duplicado!" || e?.message === "Phone duplicado!") {
-                              setServerError(e.message);
+                          onClick={async () => {
+                            setServerError("");
+                            try {
+                              await props.putContact(
+                                {
+                                  ...contact,
+                                  nome: editNome,
+                                  email: editEmail,
+                                  phone: editPhone,
+                                },
+                                contact.id,
+                              );
+                            } catch (e: any) {
+                              if (
+                                e?.message === "Email duplicado!" ||
+                                e?.message === "Phone duplicado!"
+                              ) {
+                                setServerError(e.message);
+                                return;
+                              }
+                              setServerError("Erro ao atualizar contato.");
                               return;
                             }
-                            setServerError("Erro ao atualizar contato.");
-                            return;
-                          }
-                          props.getContacts("", page, pageSize, sort, order);
-                          setId(-1);
-                          setEditar(false);
-                          props.setLayout(1);
-                        }}
+                            props.getContacts("", page, pageSize, sort, order);
+                            setId(-1);
+                            setEditar(false);
+                            props.setLayout(1);
+                          }}
                         >
                           <Check size={18} />
                         </button>
