@@ -44,10 +44,18 @@ export default function useHookAPI() {
           body: JSON.stringify(contato),
         });
         if (!response.ok) {
-          throw new Error("Falha ao tentar criar contato na API.");
+          let message = "Falha ao tentar criar contato na API.";
+          try {
+            const body = await response.json();
+            if (typeof body?.error === "string") {
+              message = body.error;
+            }
+          } catch {}
+          throw new Error(message);
         }
       } catch (error) {
         console.error("Erro na criação:", error);
+        throw error;
       } finally {
         setLoading(false);
       }
@@ -67,10 +75,18 @@ export default function useHookAPI() {
           body: JSON.stringify(contato),
         });
         if (!response.ok) {
-          throw new Error("Falha ao tentar atualizar contato na API.");
+          let message = "Falha ao tentar atualizar contato na API.";
+          try {
+            const body = await response.json();
+            if (typeof body?.error === "string") {
+              message = body.error;
+            }
+          } catch {}
+          throw new Error(message);
         }
       } catch (error) {
         console.error("Erro na atualização:", error);
+        throw error;
       } finally {
         setLoading(false);
       }
