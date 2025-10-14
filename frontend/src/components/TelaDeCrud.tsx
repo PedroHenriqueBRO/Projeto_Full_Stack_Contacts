@@ -17,7 +17,7 @@ function TelaDeCrud(props: {
     arg1: number,
     arg2: number,
     arg3: string,
-    arg4: string
+    arg4: string,
   ) => void;
   contacts: Contact[];
   delete: (arg0: number) => Promise<void>;
@@ -250,7 +250,7 @@ function TelaDeCrud(props: {
                     page,
                     pageSize,
                     sortaux,
-                    order === "none" ? "asc" : order
+                    order === "none" ? "asc" : order,
                   );
                 }}
               >
