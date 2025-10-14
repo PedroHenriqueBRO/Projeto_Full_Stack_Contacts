@@ -24,7 +24,6 @@ function TelaDeCrud(props: {
   postContact: (arg0: PostContact) => void;
   putContact: (arg0: Contact, arg1: number) => Promise<void>;
 }) {
-  const contatoaux: PostContact = { nome: "", email: "", phone: "" };
   const [editar, setEditar] = useState(false);
   const [id, setId] = useState<number>(-1);
   const [page, setPage] = useState<number>(1);
@@ -33,10 +32,47 @@ function TelaDeCrud(props: {
   let q: string = "";
   const [sort, setSort] = useState<string>("none");
   const [order, setOrder] = useState<string>("asc");
+  const [nomeError, setNomeError] = useState<string>("");
+  const [emailError, setEmailError] = useState<string>("");
+  const [phoneError, setPhoneError] = useState<string>("");
+  const [qError, setQError] = useState<string>("");
+  const [pageSizeError, setPageSizeError] = useState<string>("");
+  const [nome, setNome] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [phone, setPhone] = useState<string>("");
+
+  function validateNome(value: string) {
+    if (!value || value.trim() === "") return "Nome é obrigatório.";
+    if (value.length > 100) return "Nome deve ter no máximo 100 caracteres.";
+    return "";
+  }
+  function validateEmail(value: string) {
+    if (!value || value.trim() === "") return "Email é obrigatório.";
+    if (value.length > 254) return "Email deve ter no máximo 254 caracteres.";
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(value)) return "Email inválido.";
+    return "";
+  }
+  function validatePhone(value: string) {
+    if (!value || value.trim() === "") return "Telefone é obrigatório.";
+    return "";
+  }
+  function validateQ(value: string) {
+    if (value.length > 100) return "Busca (q) deve ter no máximo 100 caracteres.";
+    return "";
+  }
+  function validatePageSize(value: number) {
+    if (!Number.isInteger(value) || value <= 0) return "pageSize deve ser um inteiro positivo.";
+    if (value > 10) return "pageSize máximo é 10.";
+    return "";
+  }
 
   if (props.layout === 0) {
     return <div></div>;
-  } else if (props.layout === 1) {
+
+  }
+  //Tela de listar contatos
+   else if (props.layout === 1) {
     return props.loading ? (
       <div className={"w-full h-full flex items-center justify-center"}>
         {" "}
@@ -75,8 +111,12 @@ function TelaDeCrud(props: {
                     className={"rounded-full border text-center"}
                     onChange={(e) => {
                       q = e.target.value;
+                      setQError(validateQ(q));
                     }}
                   />
+                  {qError && (
+                    <span className="text-red-600 text-xs ml-2">{qError}</span>
+                  )}
                   <button
                     title="Confirmar Atualização"
                     className=" mt-1
@@ -88,6 +128,7 @@ function TelaDeCrud(props: {
                                     focus:outline-none focus:ring-2 focus:ring-indigo-400
                                 "
                     onClick={async () => {
+                      if (qError) return;
                       setProcurar(false);
                       await props.getContacts(q, 1, 10, sort, order);
                       setEditar(false);
@@ -297,9 +338,14 @@ function TelaDeCrud(props: {
             focus:border-indigo-500 focus:ring-indigo-500
             sm:text-sm p-2"
                   onChange={(e) => {
-                    setPageSize(e.target.value as unknown as number);
+                    const val = Number(e.target.value);
+                    setPageSize(val as unknown as number);
+                    setPageSizeError(validatePageSize(val));
                   }}
                 />
+                {pageSizeError && (
+                  <span className="text-red-600 text-xs">{pageSizeError}</span>
+                )}
               </div>
               <div className={"mr-3"}>
                 <button
@@ -313,6 +359,7 @@ function TelaDeCrud(props: {
                                     focus:outline-none focus:ring-2 focus:ring-indigo-400
                                 "
                   onClick={async () => {
+                    if (pageSizeError) return;
                     const pageSizeAux = pageSize;
                     setPageSize(pageSizeAux);
                     props.getContacts("", 1, pageSizeAux, sort, order);
@@ -349,7 +396,7 @@ function TelaDeCrud(props: {
       </div>
     );
   }
-
+  //Tela de criar contato
   if (props.layout === 2) {
     return (
       <div
@@ -364,7 +411,7 @@ function TelaDeCrud(props: {
           </div>
           <div
             className={
-              " w-full h-[300px] bg-gray-100 border-gray-200 shadow-lg rounded-md"
+              " w-full h-fit bg-gray-100 border-gray-200 shadow-lg rounded-md"
             }
           >
             <div className={"grid grid-rows-3 mt-13 gap-3"}>
@@ -374,8 +421,15 @@ function TelaDeCrud(props: {
                   className={
                     "bg-gray-300 rounded-md border text-center w-[250px]"
                   }
-                  onChange={(e) => (contatoaux.nome = e.target.value)}
+                  value={nome}
+                  onChange={(e) => {
+                    setNome(e.target.value);
+                    setNomeError(validateNome(e.target.value));
+                  }}
                 />
+                {nomeError && (
+                  <span className="text-red-600 text-xs mt-1">{nomeError}</span>
+                )}
               </div>
 
               <div className={"justify-center flex flex-col items-center"}>
@@ -384,8 +438,15 @@ function TelaDeCrud(props: {
                   className={
                     "bg-gray-300 rounded-md border text-center w-[250px]"
                   }
-                  onChange={(e) => (contatoaux.email = e.target.value)}
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setEmailError(validateEmail(e.target.value));
+                  }}
                 />
+                {emailError && (
+                  <span className="text-red-600 text-xs mt-1">{emailError}</span>
+                )}
               </div>
 
               <div className={"justify-center flex flex-col items-center"}>
@@ -394,8 +455,15 @@ function TelaDeCrud(props: {
                   className={
                     "bg-gray-300 rounded-md border text-center w-[250px]"
                   }
-                  onChange={(e) => (contatoaux.phone = e.target.value)}
+                  value={phone}
+                  onChange={(e) => {
+                    setPhone(e.target.value);
+                    setPhoneError(validatePhone(e.target.value));
+                  }}
                 />
+                {phoneError && (
+                  <span className="text-red-600 text-xs mt-1">{phoneError}</span>
+                )}
               </div>
             </div>
             <div className={"grid grid-cols-2 justify-center items-center "}>
@@ -404,6 +472,12 @@ function TelaDeCrud(props: {
                   className={"rounded-md border hover:bg-red-400"}
                   onClick={() => {
                     props.setLayout(1);
+                    setNomeError("");
+                    setEmailError("");
+                    setPhoneError("");
+                    setNome("");
+                    setEmail("");
+                    setPhone("");
                   }}
                 >
                   <X></X>
@@ -423,9 +497,22 @@ function TelaDeCrud(props: {
                         focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-1
                         "
                   onClick={async () => {
-                    await props.postContact(contatoaux);
+                    const nError = validateNome(nome);
+                    const eError= validateEmail(email);
+                    const pError = validatePhone(phone);
+                    setNomeError(nError);
+                    setEmailError(eError);
+                    setPhoneError(pError);
+                    if (nError || eError || pError) return;
+                    await props.postContact({ nome, email, phone });
                     props.getContacts("", page, pageSize, sort, order);
                     props.setLayout(1);
+                    setNome("");
+                    setEmail("");
+                    setPhone("");
+                    setNomeError("");
+                    setEmailError("");
+                    setPhoneError("");
                   }}
                 >
                   <Plus size={16} className="text-gray-500" />
@@ -438,7 +525,7 @@ function TelaDeCrud(props: {
       </div>
     );
   }
-
+  //Tela de editar contato
   if (props.layout === 3) {
     return props.loading ? (
       <div className={"w-full h-full flex items-center justify-center"}>
