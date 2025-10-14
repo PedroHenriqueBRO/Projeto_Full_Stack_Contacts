@@ -142,6 +142,23 @@ export class ContactService {
       if (emailDuplicado.length > 0) {
         throw new Error("Email duplicado!");
       }
+      const phoneDuplicado = contacts.filter(
+      (value: {
+        id: any;
+        nome: string;
+        email: string;
+        phone: string;
+        createdAt: Date;
+        updatedAt: Date;
+      }) => {
+        if (value.phone === putContact.phone && value.id !== id) {
+          return true;
+        }
+      }
+    );
+    if (phoneDuplicado.length > 0) {
+      throw new Error("Phone duplicado!");
+    }
       const cleanData = Object.fromEntries(
         Object.entries(putContact).filter(([_, v]) => v !== undefined)
       );
@@ -155,7 +172,10 @@ export class ContactService {
         },
       });
       return contact;
-    } catch (error) {
+    } catch (error: any) {
+      if (error.message === "Email duplicado!" || error.message === "Phone duplicado!") {
+        throw error;
+      }
       throw new Error("InternalError");
     }
   }
