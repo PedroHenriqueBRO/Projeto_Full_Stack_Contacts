@@ -37,12 +37,12 @@ describe('ContactService', () => {
     service = new ContactService();
   });
 
-  it('creates a new contact when email and phone are unique', async () => {
+  it('cria contato quando email e phone são únicos', async () => {
     const result = await service.createContact({ nome: 'Alice', email: 'alice@example.com', phone: '123' });
     expect(result).toMatchObject({ nome: 'Alice', email: 'alice@example.com', phone: '123' });
   });
 
-  it('throws when email is duplicated', async () => {
+  it('lança erro quando email é duplicado', async () => {
     await service.createContact({ nome: 'Bob', email: 'dup@example.com', phone: '555' });
     await expect(service.createContact({ nome: 'Bob2', email: 'dup@example.com', phone: '666' })).rejects.toThrow('Email duplicado!');
   });

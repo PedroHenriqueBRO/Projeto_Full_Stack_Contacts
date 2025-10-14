@@ -41,7 +41,6 @@ function TelaDeCrud(props: {
   const [nome, setNome] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
-  // estados locais para edição (evitar mutar lista original)
   const [editNome, setEditNome] = useState<string>("");
   const [editEmail, setEditEmail] = useState<string>("");
   const [editPhone, setEditPhone] = useState<string>("");
