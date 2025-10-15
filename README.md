@@ -55,7 +55,6 @@ docker-compose up --build
 ```bash
 docker-compose down
 ``` 
-## 📋 API Endpoints
 ### 4.Executar localmente
 ```bash
 # Navegue para o diretório raiz do projeto
@@ -80,6 +79,7 @@ npm run dev-full
 # Frontend: http://localhost:5173
 # Backend: http://localhost:8082
 ```
+## 📋 API Endpoints
 ### GET /contacts
 Lista contatos com paginação e busca
 ```bash
