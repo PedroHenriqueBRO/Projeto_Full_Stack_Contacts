@@ -25,7 +25,7 @@ Esta aplicação implementa um sistema CRUD completo para gerenciamento de conta
 
 ### 1. Configuração do Banco de Dados
 
-- Crie o arquivo `backend/.env` com a URL do Prisma Cloud do banco criado na sua conta:
+Crie o arquivo `backend/.env` com a URL do Prisma Cloud do banco criado na sua conta:
 - Primeiro crie sua conta no prisma cloud 
 - Vá em projects e new project
 - Crie seu projeto com accelerate
