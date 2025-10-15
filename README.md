@@ -236,7 +236,66 @@ model Contact {
 Utilizei **Cursor** como copiloto principal durante o desenvolvimento, seguindo uma abordagem de **revisão crítica** de todas as sugestões.
 
 ---
+# 🚀 Guia de Revisão de Código e Boas Práticas (Projeto Contacts-APP)
 
+Este documento detalha as correções e boas práticas de engenharia aplicadas ao projeto, focando em problemas comuns de Full Stack (React/Tailwind/Prisma).
+
+As seções a seguir documentam desafios encontrados e como o código foi revisado para garantir a corretude e a eficiência (baseado nas interações de desenvolvimento).
+
+---
+
+## 1. 🔄 Lógica de Paginação em React (Bug de Estado Assíncrono)
+
+### 💬 Meu Prompt (Problema Reportado)
+
+> "O `setPage(page + 1)` não está mudando quando clico, o `page` está chegando errado na função `props.getContacts`."
+
+### ✅ Revisão e Corretude
+
+A causa era a natureza **assíncrona** do `useState` do React. A chamada `setPage` apenas agenda a atualização do estado, mas o código seguinte era executado imediatamente, usando o valor **antigo** de `page`.
+
+A correção foi forçar a execução sequencial com o valor calculado antes de atualizar o estado:
+
+| Ação para Corretude | Código Revisado | Objetivo |
+| :--- | :--- | :--- |
+| **Cálculo Sequencial** | `const nextPage = page + 1;` | Calcula o valor que a API *realmente* precisa. |
+| **Chamada com Valor Novo** | `props.getContacts("", nextPage, pageSize);` | Garante que a API filtre para a página correta. |
+| **Atualização de Estado** | `setPage(nextPage);` | Atualiza o componente *após* a chamada ser feita, mantendo a UI sincronizada. |
+
+---
+
+## 2. 📐 Design Responsivo: Largura e Elementos de Bloco
+
+### 💬 Meu Prompt (Problema Reportado)
+
+> "Se eu tenho uma div pai com `w-full`, toda e qualquer `div` que vai aparecendo dentro vai ter essa `w-full`?"
+
+### ✅ Revisão e Corretude
+
+A revisão focou em reforçar a **semântica do CSS (`display: block`)** para evitar a adição desnecessária da classe `w-full` e manter o código minimalista.
+
+| Regra Fundamental (Corretude) | O que Ganhamos no Código | Por Que é Mais Correto |
+| :--- | :--- | :--- |
+| **Padrão de Bloco** | **`<div>`** (sem classes de largura) | Por ser `display: block`, o `<div>` **automaticamente** ocupa 100% da largura do pai, evitando a redundância da classe `w-full`. |
+| **Largura de Conteúdo** | Uso de **`w-fit`** | Garante que a largura da `div` se ajuste **exatamente** ao conteúdo interno (`width: fit-content`). |
+
+---
+
+## 3. 💾 Fluxo de Banco de Dados: Gerar Schema e Popular (Seed)
+
+### 💬 Meu Prompt (Problema Reportado)
+
+> "Tenho um *migrate* atual, quero gerar o schema e já usar esse *migrate* atual, o populando com a *seed*."
+
+### ✅ Revisão e Corretude
+
+A solução foi configurar o `package.json` para encadear os comandos do Prisma, automatizando a criação de tabelas (`migrate`), a sincronização do código (`generate`) e a inserção dos dados iniciais (`seed`).
+
+| Ação para Corretude | Comando/Configuração Implementada | Objetivo |
+| :--- | :--- | :--- |
+| **Ponto Único de Entrada** | Script **`"migrate:seed"`** | Cria um comando único para tarefas de setup do DB. |
+| **Ordem de Execução** | `"migrate:seed": "npx prisma migrate dev --name init && npm run prisma:generate"` | Garante a ordem correta: **1. DB Sync** (via `migrate dev`), **2. ORM Sync** (`generate`). O *seeding* é executado automaticamente pelo `migrate dev`. |
+| **Definição de Seed** | `package.json` (bloco `prisma`) apontando para `npm run seed` | Garante que o *seeding* seja executado de forma automática e integrada ao fluxo de migração. |
 ## 🔧 Troubleshooting
 
 ### Problemas Comuns
