@@ -25,14 +25,14 @@ Esta aplicação implementa um sistema CRUD completo para gerenciamento de conta
 
 ### 1. Configuração do Banco de Dados
 
-Crie o arquivo `backend/.env` com a URL do Prisma Cloud do banco criado na sua conta:
-    Primeiro crie sua conta no prisma cloud 
-    Vá em projects e new project
-    Crie seu projeto com accelerate
-    Clique no projeto criado
-    Clique em connect no quadro Connect to your database 
-    Procure Configure your database access
-    Generate DataBase credentials e coloque essa variável no backend/.env
+- Crie o arquivo `backend/.env` com a URL do Prisma Cloud do banco criado na sua conta:
+- Primeiro crie sua conta no prisma cloud 
+- Vá em projects e new project
+- Crie seu projeto com accelerate
+- Clique no projeto criado
+- Clique em connect no quadro Connect to your database 
+- Procure Configure your database access
+- Generate DataBase credentials e coloque essa variável no backend/.env
 ```env
 DATABASE_URL="SUA API LINK"
 ```
@@ -52,7 +52,9 @@ docker-compose up --build
 # Backend: http://localhost:3001
 ```
 ### 3.Parar o container
-docker-compose down 
+```bash
+docker-compose down
+``` 
 ## 📋 API Endpoints
 
 ### GET /contacts
