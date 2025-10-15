@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import type { Contact, PostContact } from "./ContactsInterfaces.tsx";
+const API_PREFIX = "/api";
 export default function useHookAPI() {
   const [contatos, setContatos] = useState<Contact[]>([]);
   const [layout, setLayout] = useState<number>(0);
@@ -13,7 +14,7 @@ export default function useHookAPI() {
       order: string
     ) => {
       const url = `${
-        import.meta.env.VITE_API_BASE_URL
+        API_PREFIX
       }/contacts?q=${name}&page=${page}&pageSize=${pagesize}&sort=${sort}&order=${order}`;
       setLoading(true);
       try {
@@ -33,7 +34,7 @@ export default function useHookAPI() {
   );
   const postContacts = useCallback(
     async (contato: PostContact) => {
-      const url = `${import.meta.env.VITE_API_BASE_URL}/contacts`;
+      const url = `${API_PREFIX}/contacts`;
       setLoading(true);
       try {
         const response = await fetch(url, {
@@ -64,7 +65,7 @@ export default function useHookAPI() {
   );
   const putContacts = useCallback(
     async (contato: Contact, id: number) => {
-      const url = `${import.meta.env.VITE_API_BASE_URL}/contacts/${id}`;
+      const url = `${API_PREFIX}/contacts/${id}`;
       setLoading(true);
       try {
         const response = await fetch(url, {
@@ -95,7 +96,7 @@ export default function useHookAPI() {
   );
   const deleteContacts = useCallback(
     async (id: number) => {
-      const url = `${import.meta.env.VITE_API_BASE_URL}/contacts/${id}`;
+      const url = `${API_PREFIX}/contacts/${id}`;
       setLoading(true);
       try {
         const response = await fetch(url, {
