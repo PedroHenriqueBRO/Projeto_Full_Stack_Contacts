@@ -79,6 +79,19 @@ npm run dev-full
 # Frontend: http://localhost:5173
 # Backend: http://localhost:8082
 ```
+# 5.testes
+```bash
+#estando na raiz do projeto
+cd backend
+npm test
+
+#voltando para a raiz do projeto
+cd frontend
+npm test
+
+#pronto testes de frontend e backend executados
+```
+
 ## 📋 API Endpoints
 ### GET /contacts
 Lista contatos com paginação e busca
