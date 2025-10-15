@@ -56,7 +56,30 @@ docker-compose up --build
 docker-compose down
 ``` 
 ## 📋 API Endpoints
+### 4.Executar localmente
+```bash
+# Navegue para o diretório raiz do projeto
+cd Projeto_Full_Stack_Contacts
 
+#Agora pro back-end
+cd backend
+#crie .env que contenha DATABASE_URL="SUA API LINK" e PORT=8080 exemplo
+#agora va para o front end
+cd ..
+cd frontend
+cd src
+cd components
+#va no arquivo useHookAPI e edite const API_PREFIX = "/api"; para http://localhost:8080 se definiu 8080 no back end
+#pronto agora vá para a raiz do projeto
+
+# Execução
+# Este comando instala TODAS as dependências e roda o seed.
+npm run dev-full 
+
+# Acessar a aplicação
+# Frontend: http://localhost:5173
+# Backend: http://localhost:8082
+```
 ### GET /contacts
 Lista contatos com paginação e busca
 ```bash
