@@ -101,7 +101,7 @@ GET /contacts?q=ana&page=1&pageSize=10&sort=name&order=asc
   ],
   "page": 1,
   "pageSize": 10,
-  "total": 42
+  "total": 1
 }
 ```
 
